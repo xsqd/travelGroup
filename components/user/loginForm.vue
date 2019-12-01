@@ -64,7 +64,19 @@ export default {
   },
   methods:{
     handleLoginSubmit(){
-      
+      //验证表单
+      this.$refs['form'].validate((valid)=>{
+        //为true表示没有错误
+        if(valid){
+          this.$axios({
+            url:'/accounts/login',
+            method:'post',
+            data:this.form
+          }).then(res=>{
+            console.log(res.data)
+          })
+        }
+      })
     }
   }
 }
