@@ -133,6 +133,7 @@ export default {
         if (valid) {
           // 注册提交
           console.log(props);
+          // rest运算符
           const { checkPassword, ...props } = this.form;
           // return false
 
