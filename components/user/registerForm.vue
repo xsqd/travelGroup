@@ -141,9 +141,18 @@ export default {
             url: `/accounts/register`,
             method: "POST",
             data: props
-          }).then(res => {
-            console.log(res.data);
-          });
+          }).then((res) => {
+            console.log(res.data)
+            this.$message({
+              message: '注册成功，请登录',
+              type: 'success'
+            })
+          }).catch((res) => {
+            this.$message({
+              message: '注册失败',
+              type: 'error'
+            })
+          })
         }
       });
     }
