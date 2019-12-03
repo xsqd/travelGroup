@@ -137,7 +137,7 @@ export default {
           const { checkPassword, ...props } = this.form;
           // return false
 
-          this.$axios({
+          /* this.$axios({
             url: `/accounts/register`,
             method: "POST",
             data: props
@@ -147,6 +147,24 @@ export default {
               message: '注册成功，请登录',
               type: 'success'
             })
+          }).catch((res) => {
+            this.$message({
+              message: '注册失败',
+              type: 'error'
+            })
+          }) */
+
+          //新增代码
+          this.$store.dispatch("user/register",props).then(res=>{
+            this.$message({
+              message: '注册成功，正在跳转',
+              type: 'success'
+            })
+            //跳转到首页
+            setTimeout(()=>{
+              this.$store.commit("user/setUserInfo",res);
+              this.$router.replace("/")
+            },1000)
           }).catch((res) => {
             this.$message({
               message: '注册失败',
