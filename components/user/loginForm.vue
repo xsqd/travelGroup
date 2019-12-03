@@ -79,6 +79,7 @@ export default {
 
           //新增代码
           this.$store.dispatch("user/login",this.form).then(res=>{
+            console.log(res);
             //成功提示
             this.$message({
               message:"登陆成功，正在跳转",
@@ -86,6 +87,7 @@ export default {
             })
             //跳转到首页
             setTimeout(()=>{
+              this.$store.commit("user/setUserInfo",res);
               this.$router.replace("/")
             },1000)
           })

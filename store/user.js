@@ -14,7 +14,7 @@ export const mutations= {
   },
   // 清除用户数据
   cleanUserInfo(state, info){
-    console.log(process.browser);
+    console.log(process);
     if(process.browser){
         localStorage.removeItem("userInfo");
     }
@@ -29,9 +29,10 @@ export const actions = {
       method: "POST",
       data: data
     }).then(res=>{
+      console.log(res)
       const data = res.data
       //保存到state
-      commit("setUserInfo",data);
+      // commit("setUserInfo",data);
       return data
     })
   }
