@@ -19,6 +19,7 @@
                 placeholder="请搜索出发城市"
                 @select="handleDepartSelect"
                 class="el-autocomplete"
+                v-model="form.departCity"
                 ></el-autocomplete>
             </el-form-item>
             <el-form-item label="到达城市">
@@ -27,6 +28,7 @@
                 placeholder="请搜索到达城市"
                 @select="handleDestSelect"
                 class="el-autocomplete"
+                v-model="form.destCity"
                 ></el-autocomplete>
             </el-form-item>
             <el-form-item label="出发时间">
@@ -34,7 +36,8 @@
                 <el-date-picker type="date" 
                 placeholder="请选择日期" 
                 style="width: 100%;"
-                @change="handleDate">
+                @change="handleDate"
+                v-model="form.departDate">
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="">
@@ -61,6 +64,13 @@ export default {
                 {icon: "iconfont iconshuangxiang", name: "往返"}
             ],
             currentTab: 0,
+             form: {
+                departCity: "", // 出发城市
+                departCode: "", // 出发城市代码
+                destCity: "",  // 到达城市
+                destCode: "",  // 到达城市代码
+                departDate: "", // 日期字符串
+            }
         }
     },
     methods: {
@@ -71,22 +81,53 @@ export default {
         
         // 出发城市输入框获得焦点时触发
         // value 是选中的值，cb是回调函数，接收要展示的列表
-        queryDepartSearch(value, cb){
-            cb([
-                {value: 1},
-                {value: 2},
-                {value: 3},
-            ]);
+        async queryDepartSearch(value, cb){
+            const arr = await this.querySearchAsync(value)
+            if(arr.length>0){
+              //不在下拉列表中选择，则默认选择第一项
+              this.form.departCity = arr[0].value
+              this.form.departCode = arr[0].sort
+            }
+            cb(arr)
         },
 
         // 目标城市输入框获得焦点时触发
         // value 是选中的值，cb是回调函数，接收要展示的列表
-        queryDestSearch(value, cb){
-            cb([
-                {value: 1},
-                {value: 2},
-                {value: 3},
-            ]);
+        async queryDestSearch(value, cb){
+          const arr = await this.querySearchAsync(value)
+          if(arr.length>0){
+            //不在下拉列表中选择，则默认选择第一项
+            this.form.destCity = arr[0].value
+            this.form.destCode = arr[0].sort
+          }
+          cb(arr);
+        },
+
+        //查询城市接口的方法，返回promise
+        //queryString是查询关键字
+        querySearchAsync(queryString){
+          return new Promise((resolve,reject)=>{
+            //如果关键字是空，则直接返回
+            if(!queryString){
+              return resolve([]);
+            }
+            this.$axios({
+              url:'/airs/city',
+              params:{
+                name:queryString
+              }
+            }).then(res=>{
+              const {data} = res.data
+              //下拉提示列表必须要有value字段
+              const arr = data.map(v=>{
+                return {
+                  ...v,
+                  value:v.name.replace("市","")
+                }
+              });
+              resolve(arr)
+            })
+          })
         },
        
         // 出发城市下拉选择时触发
@@ -111,7 +152,7 @@ export default {
 
         // 提交表单是触发
         handleSubmit(){
-           
+           console.log(this.form);
         }
     },
     mounted() {
