@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <div></div>
+        <FlightsFilters :flightsData="cacheFlightsData"/>
 
         <!-- 航班头部布局 -->
         <div>
@@ -48,15 +48,22 @@
 import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead.vue";
 import FlightsItem from "@/components/air/flightsItem.vue";
+import FlightsFilters from "@/components/air/flightsFilters.vue"
 
 export default {
   components: {
     FlightsListHead,
     FlightsItem,
+    FlightsFilters
   },
   data() {
     return {
       loading:true,
+      cacheFlightsData: {
+        flights: [],
+        info: {},
+        options: {}
+      }, // 缓存原始航班总数据
       flightsData: {
         flights: [],
         info: {},
@@ -96,7 +103,11 @@ export default {
     }).then(res => {
       console.log(res);
       this.flightsData = res.data;
+      // 这里是分页, 我们需要拿到数据的开始index 和结尾的 index
       // this.dataList = this.flightsData.flights;
+      // 为了避免引用类型数据污染问题,需要进行深拷贝
+      this.cacheFlightsData = { ...this.flightsData };
+      
       this.loading = false
     });
   }
