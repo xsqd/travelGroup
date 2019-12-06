@@ -15,6 +15,24 @@
         <div>
           <!-- 航班列表 -->
           <FlightsItem :flight="item" v-for="(item,index) in dataList" :key="index" />
+          <!-- 分页 -->
+          <!-- size-change：切换条数时候触发 -->
+          <!-- current-change：选择页数时候触发 -->
+          <!-- current-page: 当前页数 -->
+          <!-- page-size：当前条数 -->
+          <!-- total：总条数 -->
+          <el-pagination 
+            
+            layout="prev, pager, next, jumper, sizes, total"
+           :total="flightsData.flights.length"
+           :page-sizes="[5, 10, 15, 20]"
+           :current-page="pageIndex"
+           :page-size="pageSize"
+           @size-change="sizeChange"
+            @current-change="changePageIndex"
+            v-if="dataList.length > 0"
+           ></el-pagination>
+           <div v-else-if="!loading">本页暂无数据</div>
         </div>
       </div>
 
@@ -34,13 +52,37 @@ import FlightsItem from "@/components/air/flightsItem.vue";
 export default {
   components: {
     FlightsListHead,
-    FlightsItem
+    FlightsItem,
   },
   data() {
     return {
-      flightsData: {}, // 航班总数据
-      dataList: [] // 航班列表数据，用于循环flightsItem组件，单独出来是因为要分页
+      loading:true,
+      flightsData: {
+        flights: [],
+        info: {},
+        options: {}
+      }, // 航班总数据
+      // dataList 可以放在计算属性里面,无需每次都调用函数进行计算
+      // dataList: [], // 航班列表数据，用于循环flightsItem组件，单独出来是因为要分页
+      pageIndex:1,//当前页数
+      pageSize:5//显示条数
     };
+  },
+  computed: {
+    dataList(){
+      var start = (this.pageIndex-1)*this.pageSize
+      var end = start + this.pageSize
+      //数组slice方法接受两个参数，第一个是切割的开始（包括当前index），第二个是切割的结束（不g包括当前index）
+      return this.flightsData.flights.slice(start,end)
+    }
+  },
+  methods: {
+    changePageIndex(pageIndex){
+      this.pageIndex = pageIndex
+    },
+    sizeChange(pageSize){
+      this.pageSize = pageSize
+    }
   },
   mounted() {
     // console.log(this.$route.query);
@@ -54,7 +96,8 @@ export default {
     }).then(res => {
       console.log(res);
       this.flightsData = res.data;
-      this.dataList = this.flightsData.flights;
+      // this.dataList = this.flightsData.flights;
+      this.loading = false
     });
   }
 };
