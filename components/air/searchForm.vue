@@ -122,7 +122,8 @@ export default {
               ...element,
               //这里我们根据name生成了value
               //如果不需要“市”字，我们可以直接在这里替换
-              value:element.name.replace("市","")
+              // value:element.name.replace("市","")
+              value:element.name.replace(/市$/,"")
               // 广州市,可以将最后一个字给去掉
               // 但是对于某一些城市来说最后一个字不能去掉
               // 现在还没有发现除了最后一个字以外还有别的市字的名称
