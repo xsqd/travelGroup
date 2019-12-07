@@ -130,19 +130,56 @@ export default {
       });
     },
 
-    // 提交订单
+     // 提交订单
     handleSubmit() {
       const orderData = {
-        users:this.users,
-        insurances:this.insurances,
-        contactName:this.contactName,
-        contactPhone:this.contactPhone,
-        invoice:false,
-        seat_xid:this.data.seat_infos.seat_xid,
-        air:this.data.id,
-        captcha:this.captcha
+        users: this.users,
+        insurances: this.insurances,
+        contactName: this.contactName,
+        contactPhone: this.contactPhone,
+        invoice: false,
+        seat_xid: this.data.seat_infos.seat_xid,
+        air: this.data.id,
+        captcha: this.captcha
+      };
+
+      const token = this.$store.state.user.userInfo.token;
+
+      // 如果没有 token  证明用户还没有登录,直接跳转到登录页
+      if (!token) {
+        this.$message({
+          message: "请先登录",
+          type: "error"
+        });
+        this.$router.push({
+          path: "/user/login"
+        });
+        return;
       }
-      console.log(orderData);
+
+      console.log(token);
+
+      // 数据已经准备完毕, 需要发送请求;
+      this.$axios({
+        url: "/airorders",
+        method: "post",
+        data: orderData,
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      })
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(err => {
+          const { message } = err.response.data;
+          // 警告提示
+          this.$confirm(message, "提示", {
+            confirmButtonText: "确定",
+            showCancelButton: false,
+            type: "warning"
+          });
+        });
     }
   }
 };
