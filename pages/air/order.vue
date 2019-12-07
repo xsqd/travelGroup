@@ -3,7 +3,7 @@
         <el-row type="flex" justify="space-between">
             <!-- 订单表单 -->
             <div class="main">
-                <OrderForm/>
+                <OrderForm :data="infoData"/>
             </div>
 
             <!-- 侧边栏 -->
@@ -17,8 +17,25 @@
 <script>
 import OrderForm from '@/components/air/orderForm.vue'
 export default {
+  data () {
+    return {
+      infoData:{}
+    }
+  },
     components:{
       OrderForm
+    },
+    mounted(){
+      const {query} = this.$route
+      this.$axios({
+        url:'/airs/'+query.id,
+        params:{
+          seat_xid:query.seat_xid
+        }
+      }).then(res=>{
+        console.log(res);
+        this.infoData = res.data
+      })
     }
 }
 </script>
