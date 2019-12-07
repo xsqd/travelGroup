@@ -31,7 +31,7 @@
       <h2>保险</h2>
       <div>
         <el-checkbox-group v-model="insurances">
-        <div class="insurance-item">
+        <div class="insurance-item" v-for="(item,index) in this.data.insurances" :key="index">
           <!-- select option 当中
             label 是给用户看的
             value 给计算机看的
@@ -39,7 +39,7 @@
             checkbox-group 当中
             label 才是给计算机看的
             给用户看的文字可以直接卸载 checkbox 标签之间-->
-          <el-checkbox label="航空意外险：￥30/份×1  最高赔付260万" border></el-checkbox>
+          <el-checkbox :label="item.id" border>{{item.type}}：￥{{item.price}}/份×1 最高赔付{{item.compensation}}</el-checkbox>
         </div>
         </el-checkbox-group>
       </div>
