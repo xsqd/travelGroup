@@ -3,12 +3,12 @@
         <el-row type="flex" justify="space-between">
             <!-- 订单表单 -->
             <div class="main">
-                <OrderForm :data="infoData"/>
+                <OrderForm :data="infoData" @changeForm="setAside"/>
             </div>
 
             <!-- 侧边栏 -->
             <div class="aside">
-                <OrderAside :data="infoData"/>
+                <OrderAside :data="infoData" :asideData="asideData"/>
             </div>
         </el-row>
     </div>
@@ -22,12 +22,23 @@ export default {
     return {
       infoData:{
         seat_infos:{}
+      },
+      asideData:{
+        numUsers:0,
+        allPrice:0
       }
     }
   },
     components:{
       OrderForm,
       OrderAside
+    },
+    methods:{
+      setAside(asideData){
+        console.log("价格被改变了");
+         // 将受到的 表单子组件传过来的价格存到本身的data 当中
+         this.asideData = asideData
+      }
     },
     mounted(){
       const {query} = this.$route
