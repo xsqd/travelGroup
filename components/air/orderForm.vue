@@ -103,7 +103,32 @@ export default {
     },
 
     // 发送手机验证码
-    handleSendCaptcha() {},
+    handleSendCaptcha() {
+      // 点击发送验证码会触发这个函数
+      // 我受邀获取联系人的电话
+      // 发送请求获取到验证码,弹出窗口
+      // 这个弹窗逻辑只是测试使用
+      // 电话就是 this.contactPhone
+      if (this.contactPhone == "") {
+        // 可以加上各种手机号格式验证,错误弹窗
+        return;
+      }
+
+      this.$axios({
+        url: `captchas`,
+        method: "POST",
+        data: {
+          tel: this.contactPhone
+        }
+      }).then(res => {
+        const { code } = res.data;
+        this.$confirm(`模拟手机验证码为：${code}`, "提示", {
+          confirmButtonText: "确定",
+          showCancelButton: false,
+          type: "warning"
+        });
+      });
+    },
 
     // 提交订单
     handleSubmit() {
