@@ -118,6 +118,25 @@ export default {
       
       this.loading = false
     });
+  },
+  watch: {
+    $route(){
+      this.$axios({
+      url: "/airs",
+      //参数可以通过 this.$route.query
+      // 这里面数据本来就是一个对象,所以无需自己拼接
+      params: this.$route.query
+    }).then(res => {
+      console.log(res);
+      this.flightsData = res.data;
+      // 这里是分页, 我们需要拿到数据的开始index 和结尾的 index
+      // this.dataList = this.flightsData.flights;
+      // 为了避免引用类型数据污染问题,需要进行深拷贝
+      this.cacheFlightsData = { ...this.flightsData };
+      
+      this.loading = false
+    });
+    }
   }
 };
 </script>
