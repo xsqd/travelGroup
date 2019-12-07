@@ -8,7 +8,7 @@
 
             <!-- 侧边栏 -->
             <div class="aside">
-                          
+                <OrderAside :data="infoData"/>
             </div>
         </el-row>
     </div>
@@ -16,14 +16,18 @@
 
 <script>
 import OrderForm from '@/components/air/orderForm.vue'
+import OrderAside from "@/components/air/OrderAside.vue"
 export default {
   data () {
     return {
-      infoData:{}
+      infoData:{
+        seat_infos:{}
+      }
     }
   },
     components:{
-      OrderForm
+      OrderForm,
+      OrderAside
     },
     mounted(){
       const {query} = this.$route
