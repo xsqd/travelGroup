@@ -36,6 +36,7 @@
 
 <script>
 export default {
+  props: ["disableRedirect"],
   data(){
     return{
       // 表单数据
@@ -79,7 +80,8 @@ export default {
 
           //新增代码
           this.$store.dispatch("user/login",this.form).then(res=>{
-            console.log(res);
+            if(!this.disableRedirect){
+              console.log(res);
             //成功提示
             this.$message({
               message:"登陆成功，正在跳转",
@@ -90,6 +92,13 @@ export default {
               this.$store.commit("user/setUserInfo",res);
               this.$router.replace("/")
             },1000)
+            }else{
+              this.$store.commit("user/setUserInfo",res)
+              this.$message({
+                message:"登录成功",
+                type:"success"
+              })
+            }
           })
         }
       })
