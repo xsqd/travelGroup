@@ -67,7 +67,8 @@
             <el-input v-model="captcha"></el-input>
           </el-form-item>
         </el-form>
-        <el-button :disabled="isSending" type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
+        <el-button :disabled="isSending" type="warning" class="submit" @click="handleSubmit" v-if="$store.state.user.userInfo.token">提交订单</el-button>
+        <Login v-else :disableRedirect="true" />
         <span v-show="false">{{allPrice}}</span>
       </div>
     </div>
@@ -75,7 +76,11 @@
 </template>
 
 <script>
+import Login from "@/components/user/loginForm";
 export default {
+  components: {
+    Login
+  },
   props: ['data'],
   data(){
     return{
