@@ -214,6 +214,16 @@ export default {
           console.log(res.data);
          // 数据获取完毕, 无论成功失败,都要把正在发送的状态改成 false
           this.isSending = false;
+          // 成功以后跳转到支付页
+          // 带上 支付订单 id
+          const {data} = res.data
+          //订单id就是data.id
+          this.$router.push({
+            path:"/air/pay",
+            query:{
+              id:data.id
+            }
+          })
         })
         .catch(err => {
           // 数据获取完毕, 无论成功失败,都要把正在发送的状态改成 false
