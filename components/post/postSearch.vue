@@ -1,7 +1,7 @@
 <template>
   <div class="postSerach">
     <div class="serach">
-      <input type="text" placeholder="请输入想去的地方,比如：'广州'" >
+      <input type="text" placeholder="请输入想去的地方，比如：'广州'" >
       <i class="el-icon-search" />
     </div>
     <div class="serachtuijian">
@@ -30,6 +30,7 @@ export default {}
       top: 5px;
       right: 10px;
       font-size: 28px;
+      cursor: pointer;
     }
     input {
       width: 100%;

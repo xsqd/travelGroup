@@ -11,8 +11,8 @@
       <ul>
         <li v-for="(value,index) in posthotel[pstabindex].children" :key="index">
           <span @click="citysearch(value.city)">{{ index+1 }}</span>
-          <span @click="citysearch(value.city)"><a href="#">{{ value.city }}</a></span>
-          <span @click="citysearch(value.city)"><a href="#">{{ value.desc }}</a></span>
+          <span @click="citysearch(value.city)">{{ value.city }}</span>
+          <span @click="citysearch(value.city)">{{ value.desc }}</span>
         </li>
       </ul>
     </div>
@@ -119,6 +119,7 @@ export default {
           color:#999;
         }
         span:nth-child(2),span:nth-child(3){
+          cursor: pointer;
           &:hover{
             text-decoration: underline ;
           }
