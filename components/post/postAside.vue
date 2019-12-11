@@ -76,7 +76,7 @@ export default {
         }
           color:darkorange;
           position: relative;
-          z-index: 2;
+          z-index: 3;
           border-right: 1px solid #fff;
         }
       }
@@ -91,7 +91,7 @@ export default {
     display: none;
     position: absolute;
     z-index: 1;
-    left: 260px;
+    left: 259px;
     top: 0;
     border: 1px solid #ccc;
     width: 380px;
