@@ -40,7 +40,14 @@
           <h4 class="draft-title">
             草稿箱（0）
           </h4>
-          <div class="draft-list" />
+          <div class="draft-list">
+            <div class="draft-item">
+              <div class="draft-post-title">
+                123<span class="iconfont el-icon-edit" />
+              </div>
+              <p>2019-12-11</p>
+            </div>
+          </div>
         </div>
       </div>
     </el-row>
@@ -81,8 +88,11 @@ export default {
           showProgress: false,
           url: `${this.$axios.defaults.baseURL}/upload`,
           name: 'files',
+          hearders: {
+            Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
+          },
           // res是结果，insert方法会把内容注入到编辑器中，res.data.url是资源地址
-          uploadSuccess (res, insert) {
+          uploadSuccess: (res, insert) => {
             console.log(res)
             const file = res.data[0]
             insert(this.$axios.defaults.baseURL + file.url)
@@ -94,7 +104,10 @@ export default {
           showProgress: false,
           url: `${this.$axios.defaults.baseURL}/upload`,
           name: 'files',
-          uploadSuccess (res, insert) {
+          hearders: {
+            Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
+          },
+          uploadSuccess: (res, insert) => {
             const file = res.data[0]
             insert(this.$axios.defaults.baseURL + file.url)
           }
@@ -174,7 +187,16 @@ export default {
         }
       }).then((res) => {
         console.log(res)
-        this.$message(res.data.message)
+        this.$message({
+          type: 'success',
+          message: res.data.message
+        })
+        this.form = {
+          title: '',
+          content: '',
+          city: ''
+        }
+        this.$refs.vueEditor.editor.root.innerHTML = ''
       })
     }
   }
