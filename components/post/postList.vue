@@ -2,18 +2,14 @@
   <div class="airticle">
     <!-- 第一种结构，底部三张图片 -->
     <div class="type-1" v-if="listContent.images.length>2">
-      <!-- 标题 -->
-      <div class="header">
-        <h4>
-          <nuxt-link to="/">{{listContent.title}}</nuxt-link>
-        </h4>
-        <p class="detail">
-          <nuxt-link to="/" class="showAirt">{{listContent.summary}}</nuxt-link>
-        </p>
-      </div>
-      <!-- 图片 -->
-      <div class="imgs">
-        <nuxt-link to="/">
+      <nuxt-link :to="`post/detail?id=${listContent.id}`">
+        <!-- 标题 -->
+        <div class="header">
+          <h4>{{listContent.title}}</h4>
+          <p class="detail">{{listContent.summary}}</p>
+        </div>
+        <!-- 图片 -->
+        <div class="imgs">
           <el-row type="flex" justify="space-between">
             <el-col :span="8">
               <img :src="listContent.images[0]" alt class="showImgs" />
@@ -25,8 +21,8 @@
               <img :src="listContent.images[2]" alt class="showImgs" />
             </el-col>
           </el-row>
-        </nuxt-link>
-      </div>
+        </div>
+      </nuxt-link>
       <!-- 底部作者，点赞 -->
       <div class="dec">
         <div class="left">
@@ -52,22 +48,22 @@
     <!-- 第二种结构，左边一张图片 -->
     <div class="type-2" v-if="listContent.images.length<=2">
       <div class="content">
-        <!-- 图片 -->
-        <div class="left-imgs">
-          <a href class="showImgs">
-            <img :src="listContent.images[0]" alt />
-          </a>
-        </div>
+        <nuxt-link :to="`post/detail?id=${listContent.id}`">
+          <!-- 图片 -->
+          <div class="left-imgs">
+            <a href class="showImgs">
+              <img :src="listContent.images[0]" alt />
+            </a>
+          </div>
+        </nuxt-link>
         <!-- 标题 -->
         <div class="right-header">
-          <div class="up-detail">
-            <h4>
-              <a href>{{listContent.title}}</a>
-            </h4>
-            <p class="detail">
-              <a href class="showAirt">{{listContent.summary}}</a>
-            </p>
-          </div>
+          <nuxt-link :to="`post/detail?id=${listContent.id}`">
+            <div class="up-detail">
+              <h4>{{listContent.title}}</h4>
+              <p class="detail">{{listContent.summary}}</p>
+            </div>
+          </nuxt-link>
           <!-- 底部作者，点赞 -->
           <div class="dec">
             <div class="left">
@@ -111,15 +107,16 @@ export default {
     font-size: 18px;
     font-weight: normal;
     margin-bottom: 16px;
+    &:hover {
+      color: orange;
+    }
   }
   .detail {
     font-size: 14px;
     overflow: hidden;
     height: 63px;
     line-height: 1.5;
-    .showAirt {
-      color: #666;
-    }
+    color: #666;
   }
   .type-1,
   .type-2 {
