@@ -98,11 +98,17 @@
         </el-row>
       </div>
     </div>
+    <HotelFilters />
   </div>
 </template>
 
 <script>
-export default {};
+import HotelFilters from '@/components/hotel/hotelFilters.vue'
+export default {
+  components:{
+    HotelFilters
+  }
+};
 </script>
 
 <style lang='less' scoped>
