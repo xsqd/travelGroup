@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <el-row type="flex" justify="space-bwtween">
-      <el-col class="aside" :span="7">
+      <el-col :span="7" class="aside">
         <!-- 侧边栏 -->
-        <PostAside />
+        <PostAside :postList="postLists" @postlistAside="postlistAsides" />
         <PostTJimg />
       </el-col>
-      <el-col class="search-article" :span="17">
+      <el-col :span="17" class="search-article">
         <!-- 顶部搜索框 -->
         <el-row>
           <PostSearch />
@@ -18,7 +18,7 @@
           </el-col>
           <el-col :span="4" :offset="16" class="btn">
             <el-button type="primary">
-              <i class="el-icon-edit"></i>
+              <i class="el-icon-edit" />
               <span>写游记</span>
             </el-button>
           </el-col>
@@ -33,33 +33,41 @@
 </template>
 
 <script>
-import PostList from "@/components/post/postList";
-import PostAside from "@/components/post/postAside";
-import PostTJimg from "@/components/post/postTJimg";
-import PostSearch from "@/components/post/postSearch";
+import PostList from '@/components/post/postList'
+import PostAside from '@/components/post/postAside'
+import PostTJimg from '@/components/post/postTJimg'
+import PostSearch from '@/components/post/postSearch'
 export default {
-  data() {
-    return {
-      postList: []
-    };
-  },
   components: {
     PostList,
     PostAside,
     PostTJimg,
     PostSearch
   },
-  mounted() {
+  data () {
+    return {
+      postList: [],
+      postLists: []
+    }
+  },
+  mounted () {
     // 获取列表数据
     this.$axios({
-      url: "/posts"
-    }).then(res => {
-      console.log(res);
-      this.postList = res.data.data;
-      console.log(this.postList);
-    });
+      url: '/posts'
+    }).then((res) => {
+      console.log(res)
+      this.postList = [...res.data.data]
+      this.postLists = res.data.data
+      console.log(this.postList)
+    })
+  },
+  methods: {
+    // 左侧选项筛选
+    postlistAsides (item) {
+      this.postList = item
+    }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
