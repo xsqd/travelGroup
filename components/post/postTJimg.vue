@@ -17,6 +17,7 @@ export default {
 
 <style lang='less'>
   .postTJimg {
+    padding-top: 20px;
     width: 260px;
     .title {
       font-size: 18px;
@@ -29,6 +30,9 @@ export default {
       img {
         width: 100%;
         cursor: pointer;
+        display: block;
+        object-fit: cover;
+        padding-bottom: 10px;
       }
     }
   }
