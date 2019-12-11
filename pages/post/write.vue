@@ -110,42 +110,42 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container{
+.container {
   width: 1000px;
   margin: 0 auto;
   padding: 20px 0;
-  .main{
+  .main {
     width: 750px;
-    h2{
-      font-weight:400;
+    h2 {
+      font-weight: 400;
       font-size: 22px;
       margin-bottom: 10px;
     }
-    p{
+    p {
       font-size: 12px;
-    color: #999;
-    margin-bottom: 10px;
+      color: #999;
+      margin-bottom: 10px;
     }
-    .creat-button{
-      span{
+    .creat-button {
+      span {
         margin-left: 10px;
         font-size: 14px;
-        a{
-          color: orange
+        a {
+          color: orange;
         }
       }
     }
   }
-  .aside{
+  .aside {
     width: 200px;
-    .draft-box{
-    border: 1px solid #ddd;
-    padding: 10px;
+    .draft-box {
+      border: 1px solid #ddd;
+      padding: 10px;
     }
-    .draft-title{
-    margin-bottom: 10px;
-    font-weight: 400;
-    color: #666;
+    .draft-title {
+      margin-bottom: 10px;
+      font-weight: 400;
+      color: #666;
     }
   }
 }
