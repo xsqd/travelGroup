@@ -19,7 +19,7 @@
           <el-col :span="4" :offset="16" class="btn">
             <el-button type="primary">
               <i class="el-icon-edit" />
-              <span>写游记</span>
+              <span @click="$router.push({path: '/post/write'})">写游记</span>
             </el-button>
           </el-col>
         </el-row>
