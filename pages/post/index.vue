@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <el-row type="flex" justify="space-bwtween">
+      <!-- 侧边栏 -->
       <el-col class="aside" :span="7">
-        <!-- 侧边栏 -->
         <PostAside />
         <PostTJimg />
       </el-col>
@@ -24,9 +24,17 @@
           </el-col>
         </el-row>
         <!-- 推荐文章列表 -->
-        <el-row>
-          <PostList v-for="(item,index) in postList" :key="index" :listContent="item" />
-        </el-row>
+        <PostList v-for="(item,index) in dataList" :key="index" :listContent="item" />
+        <!-- 分页 -->
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[3, 6, 9, 12]"
+          :page-size="3"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="postList.length"
+        ></el-pagination>
       </el-col>
     </el-row>
   </div>
@@ -40,7 +48,9 @@ import PostSearch from "@/components/post/postSearch";
 export default {
   data() {
     return {
-      postList: []
+      postList: [], // 渲染列表的数据
+      currentPage: 1, // 当前页
+      currentPageSize: 3 // 当前每页显示条数
     };
   },
   components: {
@@ -49,15 +59,41 @@ export default {
     PostTJimg,
     PostSearch
   },
+  computed: {
+    // 计算一个变量，这个变量是用来进行分页的
+    dataList() {
+      // 列表开始的索引
+      var start = (this.currentPage - 1) * this.currentPageSize;
+      // 列表结束的索引
+      var end = start + this.currentPageSize;
+      return this.postList.slice(start, end);
+    }
+  },
   mounted() {
-    // 获取列表数据
-    this.$axios({
-      url: "/posts"
-    }).then(res => {
-      console.log(res);
-      this.postList = res.data.data;
-      console.log(this.postList);
-    });
+    this.loadPage();
+  },
+  methods: {
+    // 请求数据加载封装
+    loadPage() {
+      // 获取列表数据
+      this.$axios({
+        url: "/posts"
+      }).then(res => {
+        // console.log(res);
+        this.postList = res.data.data;
+        console.log(this.postList);
+      });
+    },
+    // 每页显示的文章条数
+    handleSizeChange(currentPageSize) {
+      console.log(currentPageSize);
+      this.currentPageSize = currentPageSize;
+    },
+    // 当前页面是第几页
+    handleCurrentChange(currentPage) {
+      console.log(currentPage);
+      this.currentPage = currentPage;
+    }
   }
 };
 </script>
