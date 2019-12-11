@@ -1,8 +1,8 @@
 <template>
   <div class="postSerach">
     <div class="serach">
-      <input type="text" placeholder="请输入想去的地方，比如：'广州'">
-      <i class="el-icon-search" />
+      <input ref="inpi" type="text" placeholder="请输入想去的地方，比如：'广州'">
+      <i @click="postsearch" class="el-icon-search" />
     </div>
     <div class="serachtuijian">
       <span>推荐：</span>
@@ -25,8 +25,21 @@ export default {
     console.log(this.postList)
   },
   methods: {
+    // 点击搜索图标
+    postsearch () {
+      console.log(this.$refs.inpi.value)
+      this.arrs = this.postList.filter((e) => {
+        if (e.city.name.includes(this.$refs.inpi.value)) {
+          return true
+        } else {
+          return false
+        }
+      })
+      // console.log(this.arrs)
+      this.$emit('postlistsearch', this.arrs)
+    },
+    // 点击推荐城市
     postListA (name) {
-      console.log(1)
       this.arrs = this.postList.filter((e) => {
         if (e.city.name.includes(name)) {
           return true
