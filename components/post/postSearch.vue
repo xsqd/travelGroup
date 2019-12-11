@@ -27,16 +27,20 @@ export default {
   methods: {
     // 点击搜索图标
     postsearch () {
-      console.log(this.$refs.inpi.value)
-      this.arrs = this.postList.filter((e) => {
-        if (e.city.name.includes(this.$refs.inpi.value)) {
-          return true
-        } else {
-          return false
-        }
-      })
-      // console.log(this.arrs)
-      this.$emit('postlistsearch', this.arrs)
+      // console.log(this.$refs.inpi.value)
+      if (this.$refs.inpi.value) {
+        this.arrs = this.postList.filter((e) => {
+          if (e.city.name.includes(this.$refs.inpi.value)) {
+            return true
+          } else {
+            return false
+          }
+        })
+        this.$emit('postlistsearch', this.arrs)
+        // console.log(this.arrs)
+      } else {
+        this.$emit('postlistsearch', this.postList)
+      }
     },
     // 点击推荐城市
     postListA (name) {
