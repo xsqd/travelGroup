@@ -10,9 +10,9 @@
     <div class="pschildren">
       <ul>
         <li v-for="(value,index) in posthotel[pstabindex].children" :key="index">
-          <span>{{ index+1 }}</span>
-          <span><a href="#">{{ value.city }}</a></span>
-          <span><a href="#">{{ value.desc }}</a></span>
+          <span @click="citysearch(value.city)">{{ index+1 }}</span>
+          <span @click="citysearch(value.city)"><a href="#">{{ value.city }}</a></span>
+          <span @click="citysearch(value.city)"><a href="#">{{ value.desc }}</a></span>
         </li>
       </ul>
     </div>
@@ -39,6 +39,10 @@ export default {
     this.posthotel = res.data.data
   },
   methods: {
+    // 点击推荐城市子项搜索对应的数据
+    citysearch (name) {
+      console.log(name)
+    },
     // 停留在上时 切换数据
     selectStyle (index) {
       this.pstabindex = index
