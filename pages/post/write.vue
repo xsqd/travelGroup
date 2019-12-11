@@ -8,7 +8,9 @@
           <el-form-item>
             <el-input v-model="form.title" placeholder="请输入标题" />
           </el-form-item>
-          <VueEditor ref="vueEditor" :config="config" style="height:450px;margin-bottom:80px" />
+          <el-form-item>
+            <VueEditor ref="vueEditor" :config="config" style="height:450px;margin-bottom:80px" />
+          </el-form-item>
           <el-form-item label="出发城市">
             <!-- fetch-suggestions 返回输入建议的方法 -->
             <!-- select 点击选中建议项时触发 -->
@@ -38,7 +40,14 @@
           <h4 class="draft-title">
             草稿箱（0）
           </h4>
-          <div class="draft-list" />
+          <div class="draft-list">
+            <div class="draft-item">
+              <div class="draft-post-title">
+                123<span class="iconfont el-icon-edit" />
+              </div>
+              <p>2019-12-11</p>
+            </div>
+          </div>
         </div>
       </div>
     </el-row>
@@ -76,20 +85,31 @@ export default {
         theme: 'snow',
         // 上传图片的配置
         uploadImage: {
-          url: 'http://localhost:3000/upload',
-          name: 'file',
+          showProgress: false,
+          url: `${this.$axios.defaults.baseURL}/upload`,
+          name: 'files',
+          hearders: {
+            Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
+          },
           // res是结果，insert方法会把内容注入到编辑器中，res.data.url是资源地址
-          uploadSuccess (res, insert) {
-            insert('http://localhost:3000' + res.data.url)
+          uploadSuccess: (res, insert) => {
+            console.log(res)
+            const file = res.data[0]
+            insert(this.$axios.defaults.baseURL + file.url)
           }
         },
 
         // 上传视频的配置
         uploadVideo: {
-          url: 'http://localhost:3000/upload',
-          name: 'file',
-          uploadSuccess (res, insert) {
-            insert('http://localhost:3000' + res.data.url)
+          showProgress: false,
+          url: `${this.$axios.defaults.baseURL}/upload`,
+          name: 'files',
+          hearders: {
+            Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
+          },
+          uploadSuccess: (res, insert) => {
+            const file = res.data[0]
+            insert(this.$axios.defaults.baseURL + file.url)
           }
         }
       }
@@ -140,7 +160,44 @@ export default {
       this.form.city = item.name
     },
     addPost () {
+    // 获取富文本框的内容
+      this.form.content = this.$refs.vueEditor.editor.root.innerHTML
       console.log(this.form)
+      // 获取token
+      const token = this.$store.state.user.userInfo.token
+
+      // 如果没有 token  证明用户还没有登录,直接跳转到登录页
+      if (!token) {
+        this.$message({
+          message: '请先登录',
+          type: 'error'
+        })
+        this.$router.push({
+          path: '/user/login'
+        })
+        return
+      }
+      // 发送请求
+      this.$axios({
+        url: '/posts',
+        method: 'post',
+        data: this.form,
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      }).then((res) => {
+        console.log(res)
+        this.$message({
+          type: 'success',
+          message: res.data.message
+        })
+        this.form = {
+          title: '',
+          content: '',
+          city: ''
+        }
+        this.$refs.vueEditor.editor.root.innerHTML = ''
+      })
     }
   }
 }
@@ -169,6 +226,9 @@ export default {
         font-size: 14px;
         a {
           color: orange;
+          &:hover{
+            text-decoration: underline
+          }
         }
       }
     }
@@ -183,6 +243,24 @@ export default {
       margin-bottom: 10px;
       font-weight: 400;
       color: #666;
+    }
+    .draft-list{
+      .draft-item{
+        font-size: 14px;
+        .draft-post-title{
+          cursor: pointer;
+          &:hover{
+            color: orange;
+            text-decoration: underline;
+          }
+          span{
+            margin-left: 5px;
+          }
+        }
+        p{
+          color: #999;
+        }
+      }
     }
   }
 }

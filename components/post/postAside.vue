@@ -100,9 +100,9 @@ export default {
         height: 40px;
         border: 1px solid #ccc;
         border-bottom: none;
-        font-size: 17px;
+        font-size: 14px;
         > i {
-          font-size: 24px;
+          font-size: 20px;
           color: #ccc;
         }
       }
@@ -117,7 +117,7 @@ export default {
     display: none;
     position: absolute;
     z-index: 1;
-    left: 259px;
+    left: 260px;
     top: 0;
     border: 1px solid #ccc;
     width: 380px;
@@ -144,6 +144,7 @@ export default {
         span:nth-child(2),
         span:nth-child(3) {
           cursor: pointer;
+          font-size:14px;
           &:hover {
             text-decoration: underline;
           }

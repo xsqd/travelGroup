@@ -1,20 +1,61 @@
 <template>
   <div class="postSerach">
     <div class="serach">
-      <input type="text" placeholder="请输入想去的地方，比如：'广州'" >
-      <i class="el-icon-search" />
+      <input ref="inpi" type="text" placeholder="请输入想去的地方，比如：'广州'">
+      <i @click="postsearch" class="el-icon-search" />
     </div>
     <div class="serachtuijian">
       <span>推荐：</span>
-      <a href="#">广州</a>
-      <a href="#">上海</a>
-      <a href="#">北京</a>
+      <a @click="postListA('广州')" href="#">广州</a>
+      <a @click="postListA('上海')" href="#">上海</a>
+      <a @click="postListA('北京')" href="#">北京</a>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  props: ['postList'],
+  data () {
+    return {
+      arrs: []
+    }
+  },
+  mounted () {
+    console.log(this.postList)
+  },
+  methods: {
+    // 点击搜索图标
+    postsearch () {
+      // console.log(this.$refs.inpi.value)
+      if (this.$refs.inpi.value) {
+        this.arrs = this.postList.filter((e) => {
+          if (e.city.name.includes(this.$refs.inpi.value)) {
+            return true
+          } else {
+            return false
+          }
+        })
+        this.$emit('postlistsearch', this.arrs)
+        // console.log(this.arrs)
+      } else {
+        this.$emit('postlistsearch', this.postList)
+      }
+    },
+    // 点击推荐城市
+    postListA (name) {
+      this.arrs = this.postList.filter((e) => {
+        if (e.city.name.includes(name)) {
+          return true
+        } else {
+          return false
+        }
+      })
+      // console.log(this.arrs)
+      this.$emit('postlistsearch', this.arrs)
+    }
+  }
+}
 </script>
 
 <style lang='less'>
