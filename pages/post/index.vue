@@ -25,7 +25,7 @@
         </el-row>
         <!-- 推荐文章列表 -->
         <el-row>
-          <PostList />
+          <PostList v-for="(item,index) in postList" :key="index" :listContent="item" />
         </el-row>
       </el-col>
     </el-row>
@@ -38,11 +38,26 @@ import PostAside from "@/components/post/postAside";
 import PostTJimg from "@/components/post/postTJimg";
 import PostSearch from "@/components/post/postSearch";
 export default {
+  data() {
+    return {
+      postList: []
+    };
+  },
   components: {
     PostList,
     PostAside,
     PostTJimg,
     PostSearch
+  },
+  mounted() {
+    // 获取列表数据
+    this.$axios({
+      url: "/posts"
+    }).then(res => {
+      console.log(res);
+      this.postList = res.data.data;
+      console.log(this.postList);
+    });
   }
 };
 </script>
