@@ -4,11 +4,12 @@
       <el-col class="aside" :span="7">
         <!-- 侧边栏 -->
         <PostAside />
+        <PostTJimg />
       </el-col>
       <el-col class="search-article" :span="17">
         <!-- 顶部搜索框 -->
         <el-row>
-          <div class="search"></div>
+          <PostSearch />
         </el-row>
         <!-- 推荐攻略和写游记按钮 -->
         <el-row type="flex" justify="space-bwtween" class="post-title">
@@ -28,18 +29,22 @@
         </el-row>
       </el-col>
     </el-row>
-  </div>
+  <div>
 </template>
 
 <script>
-import PostList from "@/components/post/postList";
-import PostAside from "@/components/post/postAside";
+import PostList from '@/components/post/postList'
+import PostAside from '@/components/post/postAside'
+import PostTJimg from '@/components/post/postTJimg'
+import PostSearch from '@/components/post/postSearch'
 export default {
   components: {
     PostList,
-    PostAside
+    PostAside,
+    PostTJimg,
+    PostSearch
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -52,12 +57,6 @@ export default {
     margin-right: 40px;
   }
   .search-article {
-    // width: 700px;
-    .search {
-      // width: 700px;
-      height: 76px;
-      background-color: pink;
-    }
     .post-title {
       align-items: center;
       padding-bottom: 10px;
