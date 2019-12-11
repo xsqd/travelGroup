@@ -205,7 +205,6 @@ export default {};
         width: 220px;
         height: 150px;
         object-fit: cover;
-        display: block;
       }
     }
   }
