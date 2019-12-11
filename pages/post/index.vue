@@ -24,7 +24,11 @@
           </el-col>
         </el-row>
         <!-- 推荐文章列表 -->
-        <PostList v-for="(item,index) in dataList" :key="index" :listContent="item" />
+        <PostList
+          v-for="(item,index) in dataList"
+          :key="index"
+          :listContent="item"
+        />
         <!-- 分页 -->
         <el-pagination
           @size-change="handleSizeChange"
@@ -97,7 +101,7 @@ export default {
       this.currentPage = currentPage;
     },
     postlistAsides(item) {
-      this.postList = item
+      this.postList = item;
     }
   }
 };
