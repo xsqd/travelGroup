@@ -226,6 +226,9 @@ export default {
         font-size: 14px;
         a {
           color: orange;
+          &:hover{
+            text-decoration: underline
+          }
         }
       }
     }
@@ -240,6 +243,24 @@ export default {
       margin-bottom: 10px;
       font-weight: 400;
       color: #666;
+    }
+    .draft-list{
+      .draft-item{
+        font-size: 14px;
+        .draft-post-title{
+          cursor: pointer;
+          &:hover{
+            color: orange;
+            text-decoration: underline;
+          }
+          span{
+            margin-left: 5px;
+          }
+        }
+        p{
+          color: #999;
+        }
+      }
     }
   }
 }
