@@ -8,7 +8,7 @@
           <el-form-item>
             <el-input v-model="form.title" placeholder="请输入标题" />
           </el-form-item>
-          <!-- <vue-editor id="editor" /> -->
+          <VueEditor ref="vueEditor" :config="config" style="height:450px;margin-bottom:80px" />
           <el-form-item label="出发城市">
             <!-- fetch-suggestions 返回输入建议的方法 -->
             <!-- select 点击选中建议项时触发 -->
@@ -46,15 +46,52 @@
 </template>
 
 <script>
-// import { VueEditor } from 'vue2-editor'
-// import axios from 'axios'
+import 'quill/dist/quill.snow.css'
+let VueEditor
+
+if (process.browser) {
+  VueEditor = require('vue-word-editor').default
+}
 export default {
+  components: {
+    VueEditor
+  },
   data () {
     return {
       form: {
         title: '',
         content: '',
         city: ''
+      },
+      config: {
+        modules: {
+          // 工具栏
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            ['image', 'video']
+          ]
+        },
+        // 主题
+        theme: 'snow',
+        // 上传图片的配置
+        uploadImage: {
+          url: 'http://localhost:3000/upload',
+          name: 'file',
+          // res是结果，insert方法会把内容注入到编辑器中，res.data.url是资源地址
+          uploadSuccess (res, insert) {
+            insert('http://localhost:3000' + res.data.url)
+          }
+        },
+
+        // 上传视频的配置
+        uploadVideo: {
+          url: 'http://localhost:3000/upload',
+          name: 'file',
+          uploadSuccess (res, insert) {
+            insert('http://localhost:3000' + res.data.url)
+          }
+        }
       }
     }
   },
@@ -64,7 +101,7 @@ export default {
       const cityList = await this.searchCity(value)
       // 准备建议数据,然后时候 showList 回调返回到 组件当中显示
       // 为了避免用户直接输入后啥都不干,直接将输入框失去焦点
-      // 可以默认将城市列表第一个 sort 放入 form 当中
+      // 可以默认将城市列表第一个 name 放入 form 当中
       if (cityList.length > 0) {
         this.form.city = cityList[0].name
       }
