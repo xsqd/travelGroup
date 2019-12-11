@@ -1,9 +1,15 @@
 <template>
-  <div class="postSearch">
+  <div @mouseleave="lisind()" class="postSearch">
     <div class="list">
       <ul>
-        <li v-for="(value,index) in posthotel" :key="index" @mouseover="selectStyle (index) ">
-          <span>{{ value.type }}</span><i class="el-icon-arrow-right" />
+        <li
+          :class="{lisindextab:lisindextab==(index+1)}"
+          v-for="(value,index) in posthotel"
+          :key="index"
+          @mouseover="selectStyle (index) "
+        >
+          <span>{{ value.type }}</span>
+          <i class="el-icon-arrow-right" />
         </li>
       </ul>
     </div>
@@ -11,8 +17,8 @@
       <ul>
         <li v-for="(value,index) in posthotel[pstabindex].children" :key="index">
           <span @click="citysearch(value.city)">{{ index+1 }}</span>
-          <span @click="citysearch(value.city)"><a href="#">{{ value.city }}</a></span>
-          <span @click="citysearch(value.city)"><a href="#">{{ value.desc }}</a></span>
+          <span @click="citysearch(value.city)">{{ value.city }}</span>
+          <span @click="citysearch(value.city)">{{ value.desc }}</span>
         </li>
       </ul>
     </div>
@@ -21,13 +27,18 @@
 
 <script>
 export default {
+  props: ['postList'],
   data () {
     return {
-      posthotel: [{
-        type: [],
-        children: []
-      }],
-      pstabindex: 0
+      posthotel: [
+        {
+          type: [],
+          children: []
+        }
+      ],
+      pstabindex: 0,
+      lisindextab: false,
+      arrs: []
     }
   },
   async mounted () {
@@ -39,55 +50,66 @@ export default {
     this.posthotel = res.data.data
   },
   methods: {
+    lisind () {
+      this.lisindextab = false
+    },
     // 点击推荐城市子项搜索对应的数据
     citysearch (name) {
-      console.log(name)
+      this.arrs = this.postList.filter((e) => {
+        if (e.city.name.includes(name)) {
+          return true
+        } else {
+          return false
+        }
+      })
+      this.$emit('postlistAside', this.arrs)
     },
-    // 停留在上时 切换数据
     selectStyle (index) {
       this.pstabindex = index
+      this.lisindextab = index + 1
     }
   }
 }
 </script>
 
 <style lang='less'>
-.postSearch{
+.postSearch {
   width: 260px;
   position: relative;
   .list {
     width: 261px;
-    >ul{
-       border-bottom: 1px solid #ccc;
-      >li {
+    > ul {
+      border-bottom: 1px solid #ccc;
+      .lisindextab {
+        border-right: 1px solid #fff;
+        > i {
+          color: darkorange;
+        }
+        color: darkorange;
+        border-right: 1px solid #fff;
+      }
+      > li {
         box-sizing: border-box;
         padding: 0 20px;
         width: 100%;
         display: flex;
-        justify-content:space-between;
-        align-items:center;
+        position: relative;
+        z-index: 3;
+        justify-content: space-between;
+        align-items: center;
         height: 40px;
         border: 1px solid #ccc;
         border-bottom: none;
-        font-size:17px;
-        >i {
-          font-size:24px;
-          color:#ccc;
-        }
-        &:hover{
-          >i {
-          color:darkorange;
-        }
-          color:darkorange;
-          position: relative;
-          z-index: 3;
-          border-right: 1px solid #fff;
+        font-size: 17px;
+        > i {
+          font-size: 24px;
+          color: #ccc;
         }
       }
     }
   }
   &:hover {
-    >.pschildren{
+    > .pschildren {
       display: block;
     }
   }
@@ -102,25 +124,28 @@ export default {
     background-color: #fff;
     box-sizing: border-box;
     padding: 5px 15px;
-    >ul{
-      >li{
+    > ul {
+      > li {
         height: 40px;
         line-height: 40px;
-        display:flex;
+        display: flex;
         align-items: center;
-        span:nth-child(1){
+        span:nth-child(1) {
           font-size: 24px;
         }
-        span:nth-child(1),span:nth-child(2){
-          color:darkorange;
+        span:nth-child(1),
+        span:nth-child(2) {
+          color: darkorange;
           padding-right: 15px;
         }
-        span:nth-child(3){
-          color:#999;
+        span:nth-child(3) {
+          color: #999;
         }
-        span:nth-child(2),span:nth-child(3){
-          &:hover{
-            text-decoration: underline ;
+        span:nth-child(2),
+        span:nth-child(3) {
+          cursor: pointer;
+          &:hover {
+            text-decoration: underline;
           }
         }
       }

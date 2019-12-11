@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <el-row type="flex" justify="space-bwtween">
-      <!-- 侧边栏 -->
-      <el-col class="aside" :span="7">
-        <PostAside />
+      <el-col :span="7" class="aside">
+        <!-- 侧边栏 -->
+        <PostAside :postList="postLists" @postlistAside="postlistAsides" />
         <PostTJimg />
       </el-col>
-      <el-col class="search-article" :span="17">
+      <el-col :span="17" class="search-article">
         <!-- 顶部搜索框 -->
         <el-row>
           <PostSearch />
@@ -18,7 +18,7 @@
           </el-col>
           <el-col :span="4" :offset="16" class="btn">
             <el-button type="primary">
-              <i class="el-icon-edit"></i>
+              <i class="el-icon-edit" />
               <span>写游记</span>
             </el-button>
           </el-col>
@@ -50,7 +50,8 @@ export default {
     return {
       postList: [], // 渲染列表的数据
       currentPage: 1, // 当前页
-      currentPageSize: 3 // 当前每页显示条数
+      currentPageSize: 3, // 当前每页显示条数
+      postLists: []
     };
   },
   components: {
@@ -81,6 +82,7 @@ export default {
       }).then(res => {
         // console.log(res);
         this.postList = res.data.data;
+        this.postLists = [...res.data.data];
         console.log(this.postList);
       });
     },
@@ -93,6 +95,9 @@ export default {
     handleCurrentChange(currentPage) {
       console.log(currentPage);
       this.currentPage = currentPage;
+    },
+    postlistAsides(item) {
+      this.postList = item
     }
   }
 };

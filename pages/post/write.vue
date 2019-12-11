@@ -6,17 +6,27 @@
         <p>分享你的个人游记，让更多人看到哦！</p>
         <el-form ref="form" :model="form">
           <el-form-item>
-            <el-input placeholder="请输入标题" />
+            <el-input v-model="form.title" placeholder="请输入标题" />
           </el-form-item>
-          <el-form-item>
-            <VueEditor ref="vueEditor" :config="config" style="height:458px;margin-bottom:50px" />
-          </el-form-item>
-          <el-form-item label="选择城市">
-            <el-input placeholder="请搜索游玩城市" style="width:200px" />
+          <VueEditor ref="vueEditor" :config="config" style="height:450px;margin-bottom:80px" />
+          <el-form-item label="出发城市">
+            <!-- fetch-suggestions 返回输入建议的方法 -->
+            <!-- select 点击选中建议项时触发 -->
+            <el-autocomplete
+              :fetch-suggestions="getCityList"
+              v-model="form.city"
+              @select="selectCity"
+              :trigger-on-focus="false"
+              :highlight-first-item="true"
+              placeholder="请搜索游玩城市"
+              class="el-autocomplete"
+            />
           </el-form-item>
         </el-form>
         <div class="creat-button">
-          <el-button type="primary" style="padding:9px 15px;font-size:12px">发布</el-button>
+          <el-button @click="addPost" type="primary" style="padding:9px 15px;font-size:12px">
+            发布
+          </el-button>
           <span>
             或者
             <a href="javascript:;">保存到草稿</a>
@@ -25,7 +35,9 @@
       </div>
       <div class="aside">
         <div class="draft-box">
-          <h4 class="draft-title">草稿箱（0）</h4>
+          <h4 class="draft-title">
+            草稿箱（0）
+          </h4>
           <div class="draft-list" />
         </div>
       </div>
@@ -34,46 +46,104 @@
 </template>
 
 <script>
-import "quill/dist/quill.snow.css";
-let VueEditor;
+import 'quill/dist/quill.snow.css'
+let VueEditor
 
 if (process.browser) {
-  VueEditor = require("vue-word-editor").default;
+  VueEditor = require('vue-word-editor').default
 }
 export default {
   components: {
     VueEditor
   },
-  data() {
+  data () {
     return {
       form: {
-        input: ""
+        title: '',
+        content: '',
+        city: ''
       },
       config: {
+        modules: {
+          // 工具栏
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            ['image', 'video']
+          ]
+        },
+        // 主题
+        theme: 'snow',
         // 上传图片的配置
         uploadImage: {
-          // 处理文件上传的服务器地址
-          url: "http://localhost:3000/upload",
-          // 后台需要的参数名称
-          name: "file",
+          url: 'http://localhost:3000/upload',
+          name: 'file',
           // res是结果，insert方法会把内容注入到编辑器中，res.data.url是资源地址
-          uploadSuccess(res, insert) {
-            insert("http://localhost:3000" + res.data.url);
+          uploadSuccess (res, insert) {
+            insert('http://localhost:3000' + res.data.url)
           }
         },
 
         // 上传视频的配置
         uploadVideo: {
-          url: "http://localhost:3000/upload",
-          name: "file",
-          uploadSuccess(res, insert) {
-            insert("http://localhost:3000" + res.data.url);
+          url: 'http://localhost:3000/upload',
+          name: 'file',
+          uploadSuccess (res, insert) {
+            insert('http://localhost:3000' + res.data.url)
           }
         }
       }
-    };
+    }
+  },
+  methods: {
+    async getCityList (value, showList) {
+      // 获取真正的搜索建议
+      const cityList = await this.searchCity(value)
+      // 准备建议数据,然后时候 showList 回调返回到 组件当中显示
+      // 为了避免用户直接输入后啥都不干,直接将输入框失去焦点
+      // 可以默认将城市列表第一个 name 放入 form 当中
+      if (cityList.length > 0) {
+        this.form.city = cityList[0].name
+      }
+      showList(cityList)
+    },
+    searchCity (value) {
+      return this.$axios({
+        url: '/airs/city',
+        params: {
+          name: value
+        }
+      }).then((res) => {
+        // console.log(res)
+        const { data } = res.data
+        const citys = data.map((element) => {
+          return {
+            ...element,
+            // 这里我们根据name生成了value
+            value: element.name
+          }
+        })
+        // 用过滤函数将所有不带 sort 的数据去掉
+        // const cityList = citys.filter(element=>{
+        //   // 过滤器里面,所有合法的数据应该return true
+        //   // if (element.sort) {
+        //   //   return true;
+        //   // }
+        //   return element.sort;
+        // })
+        const cityList = citys.filter(element => element.sort)
+        // 准备建议数据,然后时候 showList 回调返回到 组件当中显示
+        return cityList
+      })
+    },
+    selectCity (item) {
+      this.form.city = item.name
+    },
+    addPost () {
+      console.log(this.form)
+    }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
