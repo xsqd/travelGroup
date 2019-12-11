@@ -1,18 +1,22 @@
 <template>
   <div>
     旅游攻略首页
-    <PostList />旅游攻略首页
-    <PostSearch />
+    <!-- 顶部搜索框 -->
+    <!-- 侧边栏 -->
+    <PostAside />
+    <!-- 推荐文章列表 -->
+    <PostList />
+    
   </div>
 </template>
 
 <script>
 import PostList from "@/components/post/postList";
-import PostSearch from "@/components/post/postSearch";
+import PostAside from "@/components/post/postAside";
 export default {
   components: {
     PostList,
-    PostSearch
+    PostAside
   }
 };
 </script>

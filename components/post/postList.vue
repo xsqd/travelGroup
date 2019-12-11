@@ -212,7 +212,6 @@ export default {};
   .type-2 {
     padding-bottom: 16px;
     box-sizing: border-box;
-
     .content {
       display: flex;
       justify-content: space-between;
