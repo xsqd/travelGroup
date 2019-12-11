@@ -31,6 +31,7 @@ export default {
     }
   },
   async mounted () {
+    // 发送请求获取列表数据
     const res = await this.$axios({
       url: '/posts/cities'
     })
