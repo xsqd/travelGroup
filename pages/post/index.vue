@@ -9,7 +9,7 @@
       <el-col :span="17" class="search-article">
         <!-- 顶部搜索框 -->
         <el-row>
-          <PostSearch :postList="postLists" @postlistsearch="postlistAsides" />
+          <PostSearch />
         </el-row>
         <!-- 推荐攻略和写游记按钮 -->
         <el-row type="flex" justify="space-bwtween" class="post-title">
@@ -24,11 +24,7 @@
           </el-col>
         </el-row>
         <!-- 推荐文章列表 -->
-        <PostList
-          v-for="(item,index) in dataList"
-          :key="index"
-          :listContent="item"
-        />
+        <PostList v-for="(item,index) in dataList" :key="index" :listContent="item" />
         <!-- 分页 -->
         <el-pagination
           @size-change="handleSizeChange"
@@ -129,6 +125,7 @@ export default {
       }
       .btn {
         text-align: right;
+        cursor: pointer;
       }
     }
   }

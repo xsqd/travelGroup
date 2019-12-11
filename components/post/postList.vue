@@ -32,10 +32,10 @@
           </span>
           <div class="author">
             by
-            <nuxt-link to="/">
+            <nuxt-link to="user/personal" class="nick-header">
               <img :src="$axios.defaults.baseURL+listContent.account.defaultAvatar" alt />
+              {{listContent.account.nickname}}
             </nuxt-link>
-            <a href class="nickname">{{listContent.account.nickname}}</a>
           </div>
           <span>
             <i data-v-2372b9a8 class="el-icon-view"></i>
@@ -73,10 +73,10 @@
               </span>
               <div class="author">
                 by
-                <a href>
+                <nuxt-link to="user/personal" class="nick-header">
                   <img :src="$axios.defaults.baseURL+listContent.account.defaultAvatar" alt />
-                </a>
-                <a href class="nickname">{{listContent.account.nickname}}</a>
+                  <span class="nickname">{{listContent.account.nickname}}</span>
+                </nuxt-link>
               </div>
               <span>
                 <i data-v-2372b9a8 class="el-icon-view"></i>
@@ -178,19 +178,25 @@ export default {
     align-items: center;
     .left {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       span {
         margin-right: 10px;
       }
       .author {
         display: flex;
-        margin-right: 10px;
+        justify-content: space-between;
         align-items: center;
-        img {
-          display: block;
-          margin: 5px;
-          width: 16px;
-          height: 16px;
+        .nick-header {
+          display: flex;
+          margin-right: 10px;
+          align-items: center;
+          img {
+            display: block;
+            margin: 5px;
+            width: 16px;
+            height: 16px;
+          }
         }
       }
     }
