@@ -29,14 +29,14 @@
         </el-row>
       </el-col>
     </el-row>
-  <div>
+  </div>
 </template>
 
 <script>
-import PostList from '@/components/post/postList'
-import PostAside from '@/components/post/postAside'
-import PostTJimg from '@/components/post/postTJimg'
-import PostSearch from '@/components/post/postSearch'
+import PostList from "@/components/post/postList";
+import PostAside from "@/components/post/postAside";
+import PostTJimg from "@/components/post/postTJimg";
+import PostSearch from "@/components/post/postSearch";
 export default {
   components: {
     PostList,
@@ -44,7 +44,7 @@ export default {
     PostTJimg,
     PostSearch
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
