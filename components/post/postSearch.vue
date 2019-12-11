@@ -1,20 +1,44 @@
 <template>
   <div class="postSerach">
     <div class="serach">
-      <input type="text" placeholder="请输入想去的地方，比如：'广州'" >
+      <input type="text" placeholder="请输入想去的地方，比如：'广州'">
       <i class="el-icon-search" />
     </div>
     <div class="serachtuijian">
       <span>推荐：</span>
-      <a href="#">广州</a>
-      <a href="#">上海</a>
-      <a href="#">北京</a>
+      <a @click="postListA('广州')" href="#">广州</a>
+      <a @click="postListA('上海')" href="#">上海</a>
+      <a @click="postListA('北京')" href="#">北京</a>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  props: ['postList'],
+  data () {
+    return {
+      arrs: []
+    }
+  },
+  mounted () {
+    console.log(this.postList)
+  },
+  methods: {
+    postListA (name) {
+      console.log(1)
+      this.arrs = this.postList.filter((e) => {
+        if (e.city.name.includes(name)) {
+          return true
+        } else {
+          return false
+        }
+      })
+      // console.log(this.arrs)
+      this.$emit('postlistsearch', this.arrs)
+    }
+  }
+}
 </script>
 
 <style lang='less'>
