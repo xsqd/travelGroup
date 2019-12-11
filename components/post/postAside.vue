@@ -2,7 +2,7 @@
   <div class="postSearch">
     <div class="list">
       <ul>
-        <li v-for="(value,index) in posthotel" :key="index">
+        <li v-for="(value,index) in posthotel" :key="index" @mouseover="selectStyle (index) ">
           <span>{{ value.type }}</span><i class="el-icon-arrow-right" />
         </li>
       </ul>
@@ -36,6 +36,12 @@ export default {
     })
     // console.log(res)
     this.posthotel = res.data.data
+  },
+  methods: {
+    // 停留在上时 切换数据
+    selectStyle (index) {
+      this.pstabindex = index
+    }
   }
 }
 </script>
@@ -90,7 +96,7 @@ export default {
     width: 380px;
     background-color: #fff;
     box-sizing: border-box;
-    padding: 10px 15px;
+    padding: 5px 15px;
     >ul{
       >li{
         height: 40px;
