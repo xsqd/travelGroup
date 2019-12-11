@@ -97,8 +97,8 @@
               </div></el-col>
         </el-row>
       </div>
+      <HotelFilters />
     </div>
-    <HotelFilters />
   </div>
 </template>
 
