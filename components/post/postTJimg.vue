@@ -4,7 +4,7 @@
       推荐城市
     </div>
     <div class="constent">
-      <img src="http://img4.imgtn.bdimg.com/it/u=3647203727,842142501&fm=26&gp=0.jpg" alt="">
+      <img src="http://img5.imgtn.bdimg.com/it/u=45422900,1208560797&fm=26&gp=0.jpg" alt="">
     </div>
   </div>
 </template>
