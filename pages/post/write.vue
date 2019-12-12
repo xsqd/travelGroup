@@ -156,8 +156,8 @@ export default {
         type: 'success',
         message: '保存成功'
       })
-      // this.draftList = this.$store.state.history.postList
-      // console.log(this.draftList)
+      // 每次保存草稿就把id删除
+      this.id = ''
     },
     async getCityList (value, showList) {
       // 获取真正的搜索建议
@@ -296,6 +296,9 @@ export default {
         margin-bottom: 5px;
         .draft-post-title{
           cursor: pointer;
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space: nowrap;
           &:hover{
             color: orange;
             text-decoration: underline;
