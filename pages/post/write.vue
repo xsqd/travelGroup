@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import 'quill/dist/quill.snow.css'
 let VueEditor
 
@@ -119,10 +118,10 @@ export default {
   },
   computed: {
     draftList () {
-      this.$store.state.history.postList.forEach((element) => {
+      /* this.$store.state.history.postList.forEach((element) => {
         element.time = new Date()
         element.time = moment(element.time).format('YYYY-MM-DD')
-      })
+      }) */
       return this.$store.state.history.postList
     }
   },
