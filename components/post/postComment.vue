@@ -7,7 +7,12 @@
         </div>
           <div class="content">
               <PostCommentItem></PostCommentItem>
-              <div class="userComment">儿子你好吗</div>
+              <div class="userComment">
+                    <p>123</p>
+                    <div class="commentImg">
+                        <img src="http://img3.imgtn.bdimg.com/it/u=2455100451,3980453752&fm=26&gp=0.jpg" alt="">
+                    </div>
+              </div>
               <p class="comtent-huifu"><a href="#">回复</a></p>
           </div>
           
@@ -42,6 +47,22 @@ export default {
             padding-left: 30px;
             .userComment {
                 padding-top: 10px;
+                .commentImg {
+                width: 80px;
+                height: 80px;
+                border-radius: 6px;
+                overflow: hidden;
+                margin-right: 5px;
+                margin-top: 10px;
+                padding: 5px;
+                border: 1px dashed #ddd;
+                img {
+                    width: 80px;
+                    height: 80px;
+                    display: block;
+                    float: left;
+                }
+            }
             }
             .comtent-huifu {
                 height: 20px;
