@@ -3,7 +3,12 @@
       <!-- <myPostCommentItem></myPostCommentItem> -->
       <div class="postCommentItem-comtent">
           <div class="usernicktime"><p >地球发动机 <span class="useritem">2019-12-12 9:17</span></p><span>1</span></div>
-          <p class="comtent-item">123</p>
+          <div class="comtent-item">
+              <p>123</p>
+              <div class="commentImg">
+                  <img src="http://img3.imgtn.bdimg.com/it/u=2455100451,3980453752&fm=26&gp=0.jpg" alt="">
+              </div>
+          </div>
           <p class="comtent-huifu"><a href="#">回复</a></p>
       </div>
   </div>
@@ -32,6 +37,22 @@ export default {
         }
         .comtent-item {
             margin-top: 10px;
+            .commentImg {
+                width: 80px;
+                height: 80px;
+                border-radius: 6px;
+                overflow: hidden;
+                margin-right: 5px;
+                margin-top: 10px;
+                padding: 5px;
+                border: 1px dashed #ddd;
+                img {
+                    width: 80px;
+                    height: 80px;
+                    display: block;
+                    float: left;
+                }
+            }
         }
         .comtent-huifu {
             height: 20px;
