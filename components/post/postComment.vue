@@ -13,7 +13,7 @@
                         <img src="http://img3.imgtn.bdimg.com/it/u=2455100451,3980453752&fm=26&gp=0.jpg" alt="">
                     </div>
               </div>
-              <p class="comtent-huifu"><a href="#">回复</a></p>
+              <p class="comtent-huifu"><span>回复</span></p>
           </div>
           
       </div>
@@ -74,13 +74,18 @@ export default {
             .comtent-huifu {
                 height: 20px;
                 &:hover {
-                    a {
+                    span {
                         visibility: visible;
                     }
                 }
-                a {
+                span {
+                    color:dodgerblue;
                     float: right;
                     visibility: hidden;
+                    cursor: pointer;
+                    &:hover {
+                        text-decoration: underline;
+                    }
                 }
             }
         }
