@@ -14,13 +14,63 @@
         <span>攻略: 2019-05-22 10:57</span>
         <span>{{`阅读:${data.watch}`}}</span>
       </div>
+      <!-- 内容 -->
       <div class="content" v-html="data.content"></div>
+      <!-- 点赞页面 -->
       <div class="post-ctrl">
-        <div><span class="iconfont iconpinglun"></span><span class="i-text">{{`评论(100)`}}</span></div>
-        <div><span class="iconfont iconpinglun"></span><span class="i-text">收藏</span></div>
-        <div><span class="iconfont iconfenxiang"></span><span class="i-text">分享</span></div>
-        <div><span class="iconfont iconding"></span><span class="i-text">{{`点赞(${data.like})`}}</span></div>
+        <div>
+          <span class="iconfont iconpinglun"></span>
+          <span class="i-text">{{`评论(100)`}}</span>
+        </div>
+        <div>
+          <span class="iconfont iconpinglun"></span>
+          <span class="i-text">收藏</span>
+        </div>
+        <div>
+          <span class="iconfont iconfenxiang"></span>
+          <span class="i-text">分享</span>
+        </div>
+        <div>
+          <span class="iconfont iconding"></span>
+          <span class="i-text">{{`点赞(${data.like})`}}</span>
+        </div>
       </div>
+      <!-- 评论 -->
+      <h4>评论</h4>
+      <!-- @回复框 -->
+      <div class="reply">
+        回复 @地球发动机
+        <span>
+          x
+        </span>
+      </div>
+      <!-- 回复框 -->
+      <el-form ref="form" :model="form">
+        <el-form-item>
+          <el-input v-model="form.name" placeholder="说点什么吧。。。"></el-input>
+        </el-form-item>
+      </el-form>
+      <!-- 上传文件 -->
+      <el-row type="flex" justify="space-between" class="">
+        <el-col :span="20">
+          <el-upload
+            :limit="3"
+            :action="$axios.defaults.baseURL+'/upload'"
+            list-type="picture-card"
+            :on-success="uploadImg"
+            name="files"
+            :before-upload="screen"
+          >
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <!-- <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt />
+          </el-dialog>-->
+        </el-col>
+        <el-col :span="4" class="submit">
+          <el-button type="primary" class="sub">提交</el-button>
+        </el-col>
+      </el-row>
     </div>
     <div class="right">
       <div class="title">相关攻略</div>
@@ -37,28 +87,55 @@ import PostRom from "@/components/post/postRom.vue";
 export default {
   data() {
     return {
-      data:{
-        likeIds:[]
-      }
+      data: {
+        likeIds: []
+      },
+      form: {
+        name: ""
+      },
+      url:''
     };
   },
+  methods: {
+    uploadImg(res) {
+      console.log(res);
+      this.url = res[0].url
+    },
+    screen(flies){
+      // console.log(flies);
+      let  table = flies.type.slice(0,5)
+      // console.log(table);
+      if(table==="image"){
+        return true
+      }else{
+        this.$message.success("文件上传失败")
+         return false
+      }
+    }
+  },
+  //组件
   components: {
     PostRom
   },
+  //生命钩子函数
   created() {
     // /post/detail?id=4
     this.$axios({
       url: `/posts/?id=4`
     }).then(res => {
       this.data = res.data.data[0];
-      console.log(this.data);
+      
       // console.log(this.data.likeIds.length);
     });
+  },
+  mounted() {
+    console.log(12312);
   }
 };
 </script>
 
 <style lang="less" scoped>
+@color: #aaa;
 * {
   box-sizing: border-box;
 }
@@ -69,13 +146,13 @@ export default {
   .left {
     flex: 7;
     width: 700px;
-    .post-time{
+    .post-time {
       display: flex;
       justify-content: flex-end;
       padding: 20px;
-      span{
-        color: #ccc;
-        margin-right: 20px
+      span {
+        color: @color;
+        margin-left: 20px;
       }
     }
     .breadcrumb {
@@ -83,15 +160,61 @@ export default {
     }
     h1 {
       padding: 20px 0;
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid @color;
     }
-    .content{
-      /deep/img{
+    .content {
+      /deep/img {
         display: block;
-        max-width:700px;
+        max-width: 700px;
         // object-fit: cover;
       }
     }
+    .post-ctrl {
+      padding: 50px;
+      display: flex;
+      justify-content: center;
+      div {
+        padding: 0 10px;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        .i-text {
+          color: @color;
+        }
+        .iconfont {
+          color: #ffa707;
+          font-size: 30px;
+          margin-bottom: 5px;
+        }
+      }
+    }
+    h4 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      font-weight: normal;
+    }
+    .submit {
+      display: flex;
+      justify-content: flex-end;
+      .sub {
+        text-align: center;
+        width: 80px;
+        height: 32px;
+        padding: 0px;
+        line-height: 32px;
+      }
+    }
+    /deep/.el-input__inner {
+      height: 60px;
+    }
+      .reply{
+      font-size: 12px;
+      padding: 0 10px;
+      width: 130px;
+      height: 30px;
+      text-align: center;
+      border: 1px solid #ccc;
+  }
   }
   .right {
     padding-left: 10px;
@@ -99,7 +222,7 @@ export default {
     font-size: 18px;
     .title {
       padding: 20px 0;
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid @color;
     }
   }
 }
