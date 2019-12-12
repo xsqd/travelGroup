@@ -92,8 +92,9 @@
               <el-col :span="21">
                 <div class="areaPath">
                   <div :class="{hiddenAea:isareahidden}">
-                    <span>全部</span>
+                    <span class="myfocus">全部</span>
                     <a
+                      v-myfocus
                       v-for="(item,index) in destinationCityData.scenics"
                       :key="index"
                     >{{ item.name }}</a>
@@ -162,6 +163,19 @@
 <script>
 import HotelFilters from '@/components/hotel/hotelFilters.vue'
 export default {
+  directives: {
+    myfocus: {
+      // 当添加了当前指令的元素生成好，加到父节点的时候就会自动的触发
+      inserted (el) {
+        // console.log(el)
+        el.style = `background-color: rgb(238, 238, 238);
+        color: #999;
+        margin-right: 18px;
+        border-radius: 4px;
+        padding: 0 2px;`
+      }
+    }
+  },
   components: {
     HotelFilters
   },
@@ -417,7 +431,7 @@ export default {
     }
     .areaPath {
       margin-left: -10px;
-      span {
+      .myfocus {
         background-color: rgb(238, 238, 238);
         color: #999;
         margin-right: 18px;
