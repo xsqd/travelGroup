@@ -165,9 +165,9 @@ export default {
       // 准备建议数据,然后时候 showList 回调返回到 组件当中显示
       // 为了避免用户直接输入后啥都不干,直接将输入框失去焦点
       // 可以默认将城市列表第一个 name 放入 form 当中
-      if (cityList.length > 0) {
-        this.form.city = cityList[0].name
-      }
+      // if (cityList.length > 0) {
+      //   this.form.city = cityList[0].name
+      // }
       showList(cityList)
     },
     searchCity (value) {
@@ -220,6 +220,14 @@ export default {
         })
         this.$router.push({
           path: '/user/login'
+        })
+        return
+      }
+      // 如果输入框为空，则不发送请求
+      if (this.form.title === '' || this.form.city === '') {
+        this.$message({
+          type: 'warning',
+          message: '请填写完整'
         })
         return
       }
