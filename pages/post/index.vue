@@ -118,10 +118,21 @@ export default {
       padding-bottom: 10px;
       border-bottom: 1px solid #eee;
       margin-bottom: 20px;
+      position: relative;
       h4 {
         font-weight: normal;
         font-size: 18px;
         color: orange;
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 72px;
+          height: 2px;
+          background-color: orange;
+        }
       }
       .btn {
         text-align: right;
