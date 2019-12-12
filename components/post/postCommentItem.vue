@@ -2,7 +2,7 @@
   <div class="postCommentItem">
       <!-- <myPostCommentItem></myPostCommentItem> -->
       <div class="postCommentItem-comtent">
-          <p class="usernicktime"><span>地球发动机 2019-12-12 9:17</span><span>1</span></p>
+          <div class="usernicktime"><p >地球发动机 <span class="useritem">2019-12-12 9:17</span></p><span>1</span></div>
           <p class="comtent-item">123</p>
           <p class="comtent-huifu"><a href="#">回复</a></p>
       </div>
@@ -26,6 +26,9 @@ export default {
         .usernicktime {
             display: flex;
             justify-content: space-between;
+            .useritem {
+                color:#aaa;
+            }
         }
         .comtent-item {
             margin-top: 10px;

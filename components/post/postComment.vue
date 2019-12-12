@@ -42,7 +42,6 @@ export default {
             padding-left: 30px;
             .userComment {
                 padding-top: 10px;
-                padding-bottom: 20px;
             }
             .comtent-huifu {
                 height: 20px;
