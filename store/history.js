@@ -9,10 +9,11 @@ export const mutations = {
     console.log(state)
   },
   addDraftList (state, data) {
-    const newData = { ...data }
-    console.log(newData)
-    state.postList.push(newData)
-    console.log(state)
+    console.log(data)
+    const newData = { ...data.form }
+    // console.log(newData)
+    state.postList.splice(data.id, 1, newData)
+    // console.log(state)
     state.postList.forEach((element) => {
       element.time = new Date()
       element.time = moment(element.time).format('YYYY-MM-DD')

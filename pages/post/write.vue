@@ -73,20 +73,21 @@ export default {
         city: ''
       },
       // draftList: [],
+      id: '',
       config: {
         modules: {
           // 工具栏
           toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
             [{ 'header': 1 }, { 'header': 2 }],
-            ['image', 'video']
+            ['image']
           ]
         },
         // 主题
         theme: 'snow',
         // 上传图片的配置
         uploadImage: {
-          showProgress: false,
+          // showProgress: false,
           url: `${this.$axios.defaults.baseURL}/upload`,
           name: 'files',
           hearders: {
@@ -98,11 +99,11 @@ export default {
             const file = res.data[0]
             insert(this.$axios.defaults.baseURL + file.url)
           }
-        },
+        }
 
         // 上传视频的配置
-        uploadVideo: {
-          showProgress: false,
+        /* uploadVideo: {
+          // showProgress: false,
           url: `${this.$axios.defaults.baseURL}/upload`,
           name: 'files',
           hearders: {
@@ -112,7 +113,7 @@ export default {
             const file = res.data[0]
             insert(this.$axios.defaults.baseURL + file.url)
           }
-        }
+        } */
       }
     }
   },
@@ -131,13 +132,17 @@ export default {
     }
   },
   methods: {
+    // 获取草稿
     getDraft (index) {
+      this.id = index
+      console.log(this.id)
       this.form = { ...this.$store.state.history.postList[index] }
       this.$refs.vueEditor.editor.root.innerHTML = this.form.content
     },
+    // 保存草稿
     addDraft () {
       this.form.content = this.$refs.vueEditor.editor.root.innerHTML
-      this.$store.commit('history/addDraftList', this.form)
+      this.$store.commit('history/addDraftList', { form: this.form, id: this.id })
       // 清空输入框
       this.form = {
         title: '',
@@ -197,6 +202,7 @@ export default {
     selectCity (item) {
       this.form.city = item.name
     },
+    // 发布文章
     addPost () {
     // 获取富文本框的内容
       this.form.content = this.$refs.vueEditor.editor.root.innerHTML
