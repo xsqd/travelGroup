@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
   .postTJimg {
     padding-top: 20px;
     width: 260px;
