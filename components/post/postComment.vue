@@ -7,9 +7,9 @@
         </div>
           <div class="content">
               <PostCommentItem></PostCommentItem>
-              <div class="userComment">
+              <div class="userComment clearfix">
                     <p>123</p>
-                    <div class="commentImg">
+                    <div class="commentImg" v-for="(v,i) in ['','']" :key ='i'>
                         <img src="http://img3.imgtn.bdimg.com/it/u=2455100451,3980453752&fm=26&gp=0.jpg" alt="">
                     </div>
               </div>
@@ -37,6 +37,14 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.clearfix:after{
+         content:".";
+         display:block;
+         height:0;
+         visibility:hidden;
+         clear:both;
+     }
+     .clearfix{zoom:1;}
 .PostComment {
     border: 1px solid #ddd;
     .commentlist {
@@ -56,11 +64,10 @@ export default {
                 margin-top: 10px;
                 padding: 5px;
                 border: 1px dashed #ddd;
+                float: left;
                 img {
                     width: 80px;
                     height: 80px;
-                    display: block;
-                    float: left;
                 }
             }
             }
