@@ -97,7 +97,7 @@
               </div></el-col>
         </el-row>
       </div>
-      <HotelFilters />
+      <HotelFilters :hotelInfo='hotels' :options='options'/>
     </div>
   </div>
 </template>
@@ -105,6 +105,29 @@
 <script>
 import HotelFilters from '@/components/hotel/hotelFilters.vue'
 export default {
+  data(){
+    return{
+      hotels:{},
+      options:{}
+    }
+  },
+  mounted() {
+    this.$axios({
+        url:'/hotels',
+        params:{
+          city:74
+        }
+      }).then(res=>{
+        this.hotels=res.data
+        console.log(this.hotels);
+      })
+    ,
+    this.$axios({
+        url:'/hotels/options'
+      }).then(res=>{
+        this.options=res.data.data
+      })
+  },
   components:{
     HotelFilters
   }
