@@ -294,6 +294,8 @@ export default {
         showList(cityList)
       }
       this.conditionsForm.city = cityList[0].id
+      console.log('下面是城市Id')
+      console.log(this.conditionsForm.city)
       this.destinationCityData = cityList[0]
     },
 
