@@ -44,6 +44,7 @@ export default {
     },
     // 点击推荐城市
     postListA (name) {
+      // console.log(this.postList)
       this.arrs = this.postList.filter((e) => {
         if (e.city.name.includes(name)) {
           return true
@@ -51,14 +52,14 @@ export default {
           return false
         }
       })
-      // console.log(this.arrs)
+      console.log(this.arrs)
       this.$emit('postlistsearch', this.arrs)
     }
   }
 }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 .postSerach {
   width: 100%;
   .serach {

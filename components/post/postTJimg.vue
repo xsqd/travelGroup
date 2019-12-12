@@ -4,7 +4,7 @@
       推荐城市
     </div>
     <div class="constent">
-      <img src="http://img5.imgtn.bdimg.com/it/u=45422900,1208560797&fm=26&gp=0.jpg" alt="">
+      <img src="https://ww1.sinaimg.cn/large/005SiNxygw1f5bvywplbtj30fk078wf5.jpg" alt="">
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
   .postTJimg {
     padding-top: 20px;
     width: 260px;

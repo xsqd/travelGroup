@@ -9,7 +9,7 @@
       <el-col :span="17" class="search-article">
         <!-- 顶部搜索框 -->
         <el-row>
-          <PostSearch />
+          <PostSearch :postList="postLists" @postlistsearch="postlistAsides" />
         </el-row>
         <!-- 推荐攻略和写游记按钮 -->
         <el-row type="flex" justify="space-bwtween" class="post-title">
@@ -96,6 +96,7 @@ export default {
       console.log(currentPage);
       this.currentPage = currentPage;
     },
+    // 筛选后重新渲染页面文章数据
     postlistAsides(item) {
       this.postList = item;
     }
