@@ -38,11 +38,11 @@
       <div class="aside">
         <div class="draft-box">
           <h4 class="draft-title">
-            草稿箱
+            草稿箱({{ this.$store.state.history.postList.length }})
           </h4>
           <div class="draft-list">
             <div v-for="(item,index) in draftList" :key="index" class="draft-item">
-              <div class="draft-post-title">
+              <div @click="getDraft(index)" class="draft-post-title">
                 {{ item.title }}<span class="iconfont el-icon-edit" />
               </div>
               <p>{{ item.time }}</p>
@@ -131,9 +131,26 @@ export default {
     }
   },
   methods: {
+    getDraft (index) {
+      this.form = { ...this.$store.state.history.postList[index] }
+      this.$refs.vueEditor.editor.root.innerHTML = this.form.content
+    },
     addDraft () {
       this.form.content = this.$refs.vueEditor.editor.root.innerHTML
       this.$store.commit('history/addDraftList', this.form)
+      // 清空输入框
+      this.form = {
+        title: '',
+        content: '',
+        city: ''
+      }
+      // 清空富文本框
+      this.$refs.vueEditor.editor.root.innerHTML = ''
+      // 消息提示
+      this.$message({
+        type: 'success',
+        message: '保存成功'
+      })
       // this.draftList = this.$store.state.history.postList
       // console.log(this.draftList)
     },
@@ -268,6 +285,7 @@ export default {
     .draft-list{
       .draft-item{
         font-size: 14px;
+        margin-bottom: 5px;
         .draft-post-title{
           cursor: pointer;
           &:hover{
