@@ -69,6 +69,9 @@
           <el-button type="primary" class="sub">提交</el-button>
         </el-col>
       </el-row>
+      <el-row>
+        <PostComment></PostComment>
+      </el-row>
     </div>
     <div class="right">
       <div class="title">相关攻略</div>
@@ -81,6 +84,7 @@
 
 <script>
 import PostRom from "@/components/post/postRom.vue";
+import PostComment from "@/components/post/postComment.vue";
 
 export default {
   data() {
@@ -113,7 +117,8 @@ export default {
   },
   //组件
   components: {
-    PostRom
+    PostRom,
+    PostComment
   },
   //生命钩子函数
   created() {

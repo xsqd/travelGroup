@@ -3,13 +3,13 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/hotel' }">酒店</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/hotel' }">南京酒店</el-breadcrumb-item>
-      <el-breadcrumb-item>好来阁商务酒店</el-breadcrumb-item>
+      <el-breadcrumb-item>{{hotelData.name}}</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="header">
-      <hotelDetailHeader/>
+      <hotelDetailHeader :hotelData='hotelData'/>
     </div>
     <div class="middle">
-      <hotelDetailMiddle/>
+      <hotelDetailMiddle :hotelData='hotelData'/>
     </div>
     <div class="footer">
       <hotelDetailFooter/>
@@ -22,8 +22,23 @@ import hotelDetailHeader from '@/components/hotel/hotelDetailHeader.vue'
 import hotelDetailMiddle from '@/components/hotel/hotelDetailMiddle.vue'
 import hotelDetailFooter from '@/components/hotel/hotelDetailFooter.vue'
 export default {
+  data(){
+    return {
+      hotelData:[]
+    }
+  },
   components:{
     hotelDetailHeader,hotelDetailFooter,hotelDetailMiddle
+  },
+  mounted(){
+    let {id} = this.$route.query
+    // console.log(id);
+    this.$axios({
+      url:`/hotels?id=${id}`
+    }).then(res=>{
+      // console.log(res);
+      this.hotelData = res.data.data[0]
+    })
   }
 };
 </script>
