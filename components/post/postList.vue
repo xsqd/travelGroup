@@ -99,7 +99,7 @@ export default {
 
 <style lang="less" scoped>
 .airticle {
-  width: 700px;
+  // width: 700px;
   margin: 0 auto;
   h4 {
     overflow: hidden; // 超出隐藏
