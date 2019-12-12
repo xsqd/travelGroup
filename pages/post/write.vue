@@ -31,21 +31,21 @@
           </el-button>
           <span>
             或者
-            <a href="javascript:;">保存到草稿</a>
+            <a @click="addDraft" href="javascript:;">保存到草稿</a>
           </span>
         </div>
       </div>
       <div class="aside">
         <div class="draft-box">
           <h4 class="draft-title">
-            草稿箱（0）
+            草稿箱
           </h4>
           <div class="draft-list">
-            <div class="draft-item">
+            <div v-for="(item,index) in draftList" :key="index" class="draft-item">
               <div class="draft-post-title">
-                123<span class="iconfont el-icon-edit" />
+                {{ item.title }}<span class="iconfont el-icon-edit" />
               </div>
-              <p>2019-12-11</p>
+              <p>{{ item.time }}</p>
             </div>
           </div>
         </div>
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import 'quill/dist/quill.snow.css'
 let VueEditor
 
@@ -72,6 +73,7 @@ export default {
         content: '',
         city: ''
       },
+      // draftList: [],
       config: {
         modules: {
           // 工具栏
@@ -115,7 +117,27 @@ export default {
       }
     }
   },
+  computed: {
+    draftList () {
+      this.$store.state.history.postList.forEach((element) => {
+        element.time = new Date()
+        element.time = moment(element.time).format('YYYY-MM-DD')
+      })
+      return this.$store.state.history.postList
+    }
+  },
+  watch: {
+    draftList () {
+      return this.$store.state.history.postList
+    }
+  },
   methods: {
+    addDraft () {
+      this.form.content = this.$refs.vueEditor.editor.root.innerHTML
+      this.$store.commit('history/addDraftList', this.form)
+      // this.draftList = this.$store.state.history.postList
+      // console.log(this.draftList)
+    },
     async getCityList (value, showList) {
       // 获取真正的搜索建议
       const cityList = await this.searchCity(value)
