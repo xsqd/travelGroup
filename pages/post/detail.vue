@@ -40,9 +40,7 @@
       <!-- @回复框 -->
       <div class="reply">
         回复 @地球发动机
-        <span>
-          x
-        </span>
+        <span>x</span>
       </div>
       <!-- 回复框 -->
       <el-form ref="form" :model="form">
@@ -51,7 +49,7 @@
         </el-form-item>
       </el-form>
       <!-- 上传文件 -->
-      <el-row type="flex" justify="space-between" class="">
+      <el-row type="flex" justify="space-between" class>
         <el-col :span="20">
           <el-upload
             :limit="3"
@@ -93,23 +91,23 @@ export default {
       form: {
         name: ""
       },
-      url:''
+      url: ""
     };
   },
   methods: {
     uploadImg(res) {
       console.log(res);
-      this.url = res[0].url
+      this.url = res[0].url;
     },
-    screen(flies){
+    screen(flies) {
       // console.log(flies);
-      let  table = flies.type.slice(0,5)
+      let table = flies.type.slice(0, 5);
       // console.log(table);
-      if(table==="image"){
-        return true
-      }else{
-        this.$message.success("文件上传失败")
-         return false
+      if (table === "image") {
+        return true;
+      } else {
+        this.$message.success("文件上传失败");
+        return false;
       }
     }
   },
@@ -124,7 +122,7 @@ export default {
       url: `/posts/?id=4`
     }).then(res => {
       this.data = res.data.data[0];
-      
+
       // console.log(this.data.likeIds.length);
     });
   },
@@ -207,14 +205,36 @@ export default {
     /deep/.el-input__inner {
       height: 60px;
     }
-      .reply{
-      font-size: 12px;
+    .reply {
+      position: relative;
+      font-size: 10px;
       padding: 0 10px;
       width: 130px;
       height: 30px;
-      text-align: center;
-      border: 1px solid #ccc;
-  }
+      margin-bottom: 25px;
+      line-height: 30px;
+      border: 1px solid #dddddd;
+      background-color: #f4f4f5;
+      border-radius: 3px;
+      span {
+        line-height: 10px;
+        text-align: center;
+        font-size: 8px;
+        position: absolute;
+        top: 9px;
+        right: 6px;
+        color: #aaa;
+        width: 12px;
+        height: 12px;
+        float: right;
+        border-radius: 50%;
+              &:hover {
+                color: #fff;
+        background-color: #aaa;
+      }
+      }
+
+    }
   }
   .right {
     padding-left: 10px;
