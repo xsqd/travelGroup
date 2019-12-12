@@ -69,8 +69,9 @@
           <el-button type="primary" class="sub">提交</el-button>
         </el-col>
       </el-row>
+      <!-- 递归组件 -->
       <el-row>
-        <PostComment></PostComment>
+        <!-- <PostComment :replyData="replyData[0]"></PostComment> -->
       </el-row>
     </div>
     <div class="right">
