@@ -49,7 +49,7 @@
         </el-form-item>
       </el-form>
       <!-- 上传文件 -->
-      <el-row type="flex" justify="space-between" class>
+      <el-row type="flex" justify="space-between" class="botom">
         <el-col :span="20">
           <el-upload
             :limit="3"
@@ -95,7 +95,8 @@ export default {
       form: {
         name: ""
       },
-      url: ""
+      url: "",
+      replyData:''
     };
   },
   methods: {
@@ -123,6 +124,7 @@ export default {
   //生命钩子函数
   created() {
     // /post/detail?id=4
+    //这个是页面内容数据
     this.$axios({
       url: `/posts/?id=4`
     }).then(res => {
@@ -130,15 +132,26 @@ export default {
 
       // console.log(this.data.likeIds.length);
     });
+    //这个是评论页面数据
+     this.$axios({
+       url:`/posts/comments`,
+       params:{
+         post:  4  ,//文章id
+         _limit: 3 ,
+         _start:0,
+       }
+     }).then((res)=>{
+      console.log(res);
+      this.replyData = res.data.data
+      console.log(this.replyData);
+     })
   },
-  mounted() {
-    console.log(12312);
-  }
 };
 </script>
 
 <style lang="less" scoped>
 @color: #aaa;
+@mhb: 20px;
 * {
   box-sizing: border-box;
 }
@@ -193,7 +206,7 @@ export default {
     }
     h4 {
       font-size: 18px;
-      margin-bottom: 20px;
+      margin-bottom: @mhb;
       font-weight: normal;
     }
     .submit {
@@ -216,7 +229,7 @@ export default {
       padding: 0 10px;
       width: 130px;
       height: 30px;
-      margin-bottom: 25px;
+      margin-bottom: @mhb;
       line-height: 30px;
       border: 1px solid #dddddd;
       background-color: #f4f4f5;
@@ -233,12 +246,11 @@ export default {
         height: 12px;
         float: right;
         border-radius: 50%;
-              &:hover {
-                color: #fff;
-        background-color: #aaa;
+        &:hover {
+          color: #fff;
+          background-color: #aaa;
+        }
       }
-      }
-
     }
   }
   .right {

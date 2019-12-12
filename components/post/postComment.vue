@@ -33,6 +33,7 @@ export default {
 
 <style lang='less' scoped>
 .PostComment {
+    margin-top: 20px;
     border: 1px solid #ddd;
     .commentlist {
         border-bottom: 1px dashed #ddd;
