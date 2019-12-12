@@ -207,6 +207,8 @@ export default {
     // 获取富文本框的内容
       this.form.content = this.$refs.vueEditor.editor.root.innerHTML
       console.log(this.form)
+      // 删除this.form里的time属性
+      delete this.form.time
       // 获取token
       const token = this.$store.state.user.userInfo.token
 
