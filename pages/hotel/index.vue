@@ -92,15 +92,21 @@
               <el-col :span="21">
                 <div class="areaPath">
                   <div :class="{hiddenAea:isareahidden}">
-                    <span class="myfocus">全部</span>
+                    <span :class="{myfocus:-1===ismyfocus}">全部</span>
                     <a
-                      v-myfocus
+                      @click="changeSin(index)"
+                      :class="{myfocus:index===ismyfocus}"
                       v-for="(item,index) in destinationCityData.scenics"
                       :key="index"
                     >{{ item.name }}</a>
                   </div>
-                  <i @click="isareahidden=!isareahidden" :class="{iup:!isareahidden,idown:isareahidden}" class="el-icon-d-arrow-right" />
-                  等{{ destinationCityData.scenics.length }}个区域
+                  <div @click="isareahidden=!isareahidden">
+                    <i
+                      :class="{iup:!isareahidden,idown:isareahidden}"
+                      class="el-icon-d-arrow-right"
+                    />
+                    等{{ destinationCityData.scenics.length }}个区域
+                  </div>
                 </div>
               </el-col>
             </el-row>
@@ -123,43 +129,47 @@
               </el-col>
               <el-col :span="21">
                 <div class="avaragePrice">
-                  <div>
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <span>¥332</span>
-                  </div>
-                  <div>
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <span>¥521</span>
-                  </div>
-                  <div class="price4">
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <span>¥768</span>
-                  </div>
+                  <el-tooltip :visible-arrow="false" class="item" effect="dark" content="等级评定是针对房价，设施和服务等各方面水平的综合评估。" placement="left-end">
+                    <div>
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <span>¥332</span>
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip :visible-arrow="false" class="item" effect="dark" content="等级评定是针对房价，设施和服务等各方面水平的综合评估。" placement="left-end">
+                    <div>
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <span>¥521</span>
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip :visible-arrow="false" class="item" effect="dark" content="等级评定是针对房价，设施和服务等各方面水平的综合评估。" placement="left-end">
+                    <div class="price4">
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <span>¥768</span>
+                    </div>
+                  </el-tooltip>
                 </div>
               </el-col>
             </el-row>
           </el-col>
           <el-col :span="8">
-            <div class="map mt">
-              <img src="../../assets/snipaste_20191211_104705.png" alt>
-            </div>
+            <div id="mymap" class="mymap mt" />
           </el-col>
         </el-row>
       </div>
-      <HotelFilters :hotelInfo='hotels' :options='options'/>
+      <HotelFilters :hotelInfo="hotels" :options="options" />
     </div>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=b90f3894dde280b2f3ac4318bbf68e10" />
   </div>
 </template>
-
 <script>
 import HotelFilters from '@/components/hotel/hotelFilters.vue'
 export default {
@@ -181,8 +191,10 @@ export default {
   },
   data () {
     return {
-      hotels:{},
-      options:{},
+      mapData: [{}],
+      ismyfocus: -1,
+      hotels: [{}],
+      options: {},
       isareahidden: true,
       isShowperson: false,
       personNo: {
@@ -257,24 +269,62 @@ export default {
   },
   computed: {},
   async mounted () {
-   await this.getCity(this.destinationCity)
-      this.$axios({
-        url:'/hotels',
-        params:{
-          city:this.conditionsForm.city
-        }
-      }).then(res=>{
-        this.hotels=res.data
-        console.log(this.hotels);
-      })
-    ,
+    await this.getCity(this.destinationCity)
+    // console.log('这是酒店')
+    await this.$axios({
+      url: '/hotels',
+      params: {
+        city: this.conditionsForm.city
+      }
+    }).then((res) => {
+      const data = res.data
+      // 上面为传送数据部分
+      this.createMap(data.data)
+      this.hotels = data
+      return data
+    })
+
     this.$axios({
-        url:'/hotels/options'
-      }).then(res=>{
-        this.options=res.data.data
-      })
+      url: '/hotels/options'
+    }).then((res) => {
+      console.log('这是')
+      console.log(res)
+      this.options = res.data.data
+    })
   },
   methods: {
+    async createMap (mapData) {
+      console.log(mapData)
+      const map = new AMap.Map('mymap', {
+        resizeEnable: true,
+        center: [118.87603, 31.730244]
+      })
+
+      const markers = [{
+        icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-1.png',
+        position: [116.205467, 39.907761]
+      }, {
+        icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-2.png',
+        position: [116.368904, 39.913423]
+      }, {
+        position: [116.305467, 39.807761]
+      }]
+
+      // 添加一些分布不均的点到地图上,地图上添加三个点标记，作为参照
+      mapData.forEach((item, index) => {
+        console.log(item, index)
+        new AMap.Marker({
+          map,
+          position: [item.location.longitude, item.location.latitude],
+          title: item.address,
+          content: `<span class="marker">${index + 1}</span>`
+        })
+      })
+    },
+    // 改变选择改变地图
+    changeSin (index) {
+      this.ismyfocus = index
+    },
     shouArea () {},
     getpersonNo () {
       this.personNo.num = ''
@@ -325,13 +375,15 @@ export default {
       }).then((res) => {
         console.log(res)
         const { data } = res.data
-        const citys = data.map((e) => {
-          return {
-            ...e,
-            value: e.name
-          }
-        })
-        const cityList = citys.filter(element => element.sort)
+        const citys = data
+          .map((e) => {
+            return {
+              ...e,
+              value: e.name
+            }
+          })
+        // citys.split(7, 10)
+        const cityList = citys.filter(element => element.id)
         // 准备建议数据,然后时候 showList 回调返回到 组件当中显示
         return cityList
       })
@@ -341,6 +393,19 @@ export default {
 </script>
 
 <style lang='less' scoped>
+
+/deep/.amap-maps{
+.marker{
+    display: inline-block;
+    width: 22px;
+    height: 36px;
+    background-image: url(https://webapi.amap.com/theme/v1.3/markers/b/mark_b.png);
+    background-size: 22px 36px;
+    text-align: center;
+    line-height: 24px;
+    color: #fff;
+}
+}
 //上收
 .iup {
   transform: rotate(270deg);
@@ -450,12 +515,15 @@ export default {
     }
     .areaPath {
       margin-left: -10px;
-      .myfocus {
-        background-color: rgb(238, 238, 238);
-        color: #999;
+      span{
         margin-right: 18px;
         border-radius: 4px;
         padding: 0 2px;
+      }
+      .myfocus {
+        background-color: rgb(238, 238, 238);
+        color: #999;
+
       }
       a {
         cursor: pointer;
@@ -480,7 +548,7 @@ export default {
           margin-left: 5px;
         }
       }
-      .price4{
+      .price4 {
         width: 34.6%;
       }
       margin-left: -10px;
@@ -497,13 +565,9 @@ export default {
     .areahidden {
       margin-left: -10px;
     }
-    .map {
+    #mymap {
       width: 420px;
       height: 260px;
-      img {
-        width: 100%;
-        height: 100%;
-      }
     }
   }
 }
