@@ -2,14 +2,15 @@
   <div class="postCommentItem">
       <!-- <myPostCommentItem></myPostCommentItem> -->
       <div class="postCommentItem-comtent">
-          <div class="usernicktime"><p >地球发动机 <span class="useritem">2019-12-12 9:17</span></p><span>1</span></div>
-          <div class="comtent-item">
+          <div class="usernicktime"><p >地球发动机<span class="useritem">2019-12-12 9:17</span></p><span>1</span></div>
+          <div class="comtent-item clearfix">
               <p>123</p>
-              <div class="commentImg">
+              <div class="commentImg" v-for="(v,i) in ['','','']" :key ='i'>
                   <img src="http://img3.imgtn.bdimg.com/it/u=2455100451,3980453752&fm=26&gp=0.jpg" alt="">
               </div>
+              
           </div>
-          <p class="comtent-huifu"><a href="#">回复</a></p>
+          <p class="comtent-huifu"><span >回复</span></p>
       </div>
   </div>
 </template>
@@ -21,6 +22,14 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.clearfix:after{
+         content:".";
+         display:block;
+         height:0;
+         visibility:hidden;
+         clear:both;
+     }
+     .clearfix{zoom:1;}
 .postCommentItem {
     width: 100%;
     background: #f9f9f9;
@@ -31,6 +40,9 @@ export default {
         .usernicktime {
             display: flex;
             justify-content: space-between;
+            >p{
+                margin-right: 5px;
+            }
             .useritem {
                 color:#aaa;
             }
@@ -46,24 +58,29 @@ export default {
                 margin-top: 10px;
                 padding: 5px;
                 border: 1px dashed #ddd;
+                float: left;
                 img {
                     width: 80px;
                     height: 80px;
                     display: block;
-                    float: left;
                 }
             }
         }
         .comtent-huifu {
             height: 20px;
             &:hover {
-                a {
+                span {
                     visibility: visible;
                 }
             }
-            a {
+            span {
                 float: right;
+                color:dodgerblue;
+                cursor: pointer;
                 visibility: hidden;
+                &:hover {
+                    text-decoration: underline;
+                }
             }
         }
     }
