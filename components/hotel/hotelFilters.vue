@@ -144,13 +144,20 @@
             </nuxt-link>
           </li> -->
           <div class="link">
-            <nuxt-link to="https://hotels.ctrip.com/hotel/694679.html" v-for="(value,index) in item.products" :key="index">
+            <!-- <nuxt-link to="https://hotels.ctrip.com/hotel/694679.html" v-for="(value,index) in item.products" :key="index">
               <div class="lianjie">
                 <span style="width:120px; display:inline-block;">{{item.products[index].name}}</span>
                 <span class="hight-light larger">￥{{item.products[index].price}}</span>起
                 <i class="el-icon-arrow-right"></i>
               </div>
-            </nuxt-link>
+            </nuxt-link> -->
+            <a href="https://hotels.ctrip.com/hotel/694679.html" target="view_frame" v-for="(value,index) in item.products" :key="index">
+               <div class="lianjie">
+                <span style="width:120px; display:inline-block;">{{item.products[index].name}}</span>
+                <span class="hight-light larger">￥{{item.products[index].price}}</span>起
+                <i class="el-icon-arrow-right"></i>
+              </div>
+            </a>
           </div>
           <!-- <li>
             <span>{{item.products[1].name}}</span>
