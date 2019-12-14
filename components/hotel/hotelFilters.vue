@@ -85,18 +85,20 @@
       v-for="(item,index) in hotelInfo.data" :key="index"
     >
       <el-col :span="8">
-        <a href="#">
-          <img
+        <nuxt-link :to="`/hotel/hotelDetail?id=${item.id}`">
+           <img
             :src="`${item.photos}`"
             :alt="`${item.name}`"
             width="320"
             height="210"
           />
-        </a>
+        </nuxt-link>
       </el-col>
       <el-col :span="10">
         <el-row>
-          <h2 style="font-weight:normal;font-size:24px;color:#000;">{{item.name}}</h2>
+          <nuxt-link :to="`/hotel/hotelDetail?id=${item.id}`">
+            <h2 style="font-weight:normal;font-size:24px;color:#000;">{{item.name}}</h2>
+          </nuxt-link>
         </el-row>
         <el-row class="hotelLevel">
           <span style="font-size:16px;">{{item.alias}}</span>
@@ -131,15 +133,26 @@
         </div>
       </el-col>
       <el-col :span="6">
-        <ul style="margin-top:20px;padding:0 10px;">
-          <li>
-            <span>{{item.products[0].name}}</span>
-            <div>
-              <span class="hight-light larger">￥{{item.products[0].price}}</span>起
-              <i class="el-icon-arrow-right"></i>
-            </div>
-          </li>
-          <li>
+        <!-- <ul style="margin-top:20px;padding:0 10px;">
+          <li v-for="(value,index) in item.products" :key="index">
+            <nuxt-link to="/">
+              <span>{{item.products[index].name}}</span>
+              <div>
+                <span class="hight-light larger">￥{{item.products[index].price}}</span>起
+                <i class="el-icon-arrow-right"></i>
+              </div>
+            </nuxt-link>
+          </li> -->
+          <div class="link">
+            <nuxt-link to="https://hotels.ctrip.com/hotel/694679.html" v-for="(value,index) in item.products" :key="index">
+              <div class="lianjie">
+                <span style="width:120px; display:inline-block;">{{item.products[index].name}}</span>
+                <span class="hight-light larger">￥{{item.products[index].price}}</span>起
+                <i class="el-icon-arrow-right"></i>
+              </div>
+            </nuxt-link>
+          </div>
+          <!-- <li>
             <span>{{item.products[1].name}}</span>
             <div>
               <span class="hight-light larger">￥{{item.products[1].price}}</span>起
@@ -152,19 +165,10 @@
               <span class="hight-light larger">￥{{item.products[2].price}}</span>起
               <i class="el-icon-arrow-right"></i>
             </div>
-          </li>
-        </ul>
+          </li> -->
+        <!-- </ul> -->
       </el-col>
     </el-row>
-    <div class="pagination-box">
-      <el-pagination
-        small
-        layout="prev, pager, next"
-        :total="50"
-        prev-text='< 上一页'
-        next-text='下一页 >'>
-      </el-pagination>
-    </div>
   </div>
 </template>
 
@@ -175,6 +179,9 @@ export default {
     return {
       value: 4000
     };
+  },
+  methods:{
+    
   }
 };
 </script>
@@ -233,20 +240,23 @@ export default {
 .hotel-summary-row {
   margin: 1em 0;
 }
-ul>li{
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #ebeef5;
-  padding: 12px 10px;
-  color: #606266;
-  font-size: 14px;
-}
+// ul>li{
+//   display: flex;
+//   justify-content: space-between;
+//   border-bottom: 1px solid #ebeef5;
+//   padding: 12px 10px;
+//   color: #606266;
+//   font-size: 14px;
+// }
 .larger {
   font-size: larger;
 }
-.pagination-box{
-  display: flex;
-  justify-content: flex-end;
-  padding: 20px 0 40px;
+.link{
+  margin-top: 20px;
+  padding: 0 10px;
+}
+.lianjie{
+  border-bottom: 1px solid #ebeef5;
+  padding: 12px 0;
 }
 </style>
