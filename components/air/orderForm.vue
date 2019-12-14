@@ -68,7 +68,9 @@
           </el-form-item>
         </el-form>
         <el-button :disabled="isSending" type="warning" class="submit" @click="handleSubmit" v-if="$store.state.user.userInfo.token">提交订单</el-button>
-        <Login v-else :disableRedirect="true" />
+        <div v-else :disableRedirect="true">请登录
+        <Login  />
+        </div>
         <span v-show="false">{{allPrice}}</span>
       </div>
     </div>

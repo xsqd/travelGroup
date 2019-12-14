@@ -15,9 +15,9 @@
       <el-col :span="6">
         <div class="live-filters">
           <div class="live">住宿等级</div>
-          <el-dropdown>
+          <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              不限
+              {{placeholder}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -40,9 +40,9 @@
       <el-col :span="6">
         <div class="live-filters">
           <div class="live">住宿类型</div>
-          <el-dropdown>
+          <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              不限
+              {{placeholder}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" style="width:150px;">
@@ -62,9 +62,9 @@
       <el-col :span="6">
         <div class="live-filters">
           <div class="live">酒店设施</div>
-          <el-dropdown>
+          <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              不限
+              {{placeholder}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" style="width:150px;">
@@ -84,9 +84,9 @@
       <el-col :span="6">
         <div class="live-filters" style="border:none;">
           <div class="live">酒店品牌</div>
-          <el-dropdown>
+          <el-dropdown >
             <span class="el-dropdown-link">
-              不限
+              {{placeholder}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" style="width:150px;overflow:auto;max-height:230px;">
@@ -212,7 +212,8 @@ export default {
   props: ["hotelInfo", "options"],
   data() {
     return {
-      value: 4000
+      value: 4000,
+      placeholder:'不限'
     };
   },
   methods: {
@@ -255,6 +256,10 @@ export default {
       }
       console.log(this.options.brands[index].show);
       this.$forceUpdate();
+    },
+      handleCommand(command){
+      console.log(command)
+      this.placeholder=command
     }
 
   }
