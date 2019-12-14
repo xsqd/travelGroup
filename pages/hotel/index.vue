@@ -299,27 +299,32 @@ export default {
         resizeEnable: true,
         center: [118.87603, 31.730244]
       })
-
-      const markers = [{
-        icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-1.png',
-        position: [116.205467, 39.907761]
-      }, {
-        icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-2.png',
-        position: [116.368904, 39.913423]
-      }, {
-        position: [116.305467, 39.807761]
-      }]
+      closeInfoWindow()
 
       // 添加一些分布不均的点到地图上,地图上添加三个点标记，作为参照
       mapData.forEach((item, index) => {
         console.log(item, index)
-        new AMap.Marker({
+        map.clearInfoWindow()
+        const marker = new AMap.Marker({
           map,
           position: [item.location.longitude, item.location.latitude],
           title: item.address,
           content: `<span class="marker">${index + 1}</span>`
         })
+        marker.content = item.address
+        marker.on('mouseout', closeInfoWindow)
+        marker.emit('mouseout', { target: marker })
+        marker.on('mouseover', markerClick)
+        marker.emit('mouseover', { target: marker })
       })
+      function markerClick (e) {
+        const infoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30) })
+        infoWindow.setContent(e.target.content)
+        infoWindow.open(map, e.target.getPosition())
+      }
+      function closeInfoWindow () {
+        map.clearInfoWindow()
+      }
     },
     // 改变选择改变地图
     changeSin (index) {
