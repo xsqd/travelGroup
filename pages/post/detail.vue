@@ -38,14 +38,14 @@
       <!-- 评论 -->
       <h4>评论</h4>
       <!-- @回复框 -->
-      <div class="reply" v-if="userdata.follow">
+      <div class="reply" v-show="userdata.follow">
         {{ "回复@ "+NickName}}
         <span @click="del">x</span>
       </div>
       <!-- 回复框 -->
       <el-form ref="form" :model="form">
         <el-form-item>
-          <el-input v-model="form.name" placeholder="说点什么吧。。。"></el-input>
+          <el-input v-model="userdata.content" placeholder="说点什么吧。。。"></el-input>
         </el-form-item>
       </el-form>
       <!-- 上传文件 -->
@@ -130,7 +130,7 @@ export default {
         follow: "",
         content: "",
         pics: [],
-        post: 6
+        post: this.$route.query.id
       },
       NickName: "",
       // 当前页码
@@ -225,6 +225,8 @@ export default {
       console.log(s);
       this.userdata.follow = s.id;
       this.NickName = s.nickname;
+      console.log(this.userdata.follow);
+      console.log(this.NickName);
       console.log(this.userdata);
     },
     //发送评论
@@ -248,7 +250,7 @@ export default {
         this.getReplay();
         this.userdata.follow = "";
         this.NickName = "";
-        this.form.name = "";
+        this.userdata.content = "";
         this.userdata.pics = [];
         this.$refs.upload.clearFiles();
       });
@@ -282,7 +284,7 @@ export default {
       url: `/posts/?id=${this.routerId}`
     }).then(res => {
       this.data = res.data.data[0];
-      console.log(res);
+      // console.log(res);
       // console.log(this.data);
       // console.log(this.data.likeIds.length);
     });
