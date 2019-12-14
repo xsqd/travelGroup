@@ -275,7 +275,7 @@ export default {
   computed: {},
   async mounted () {
     await this.getCity(this.destinationCity)
-    await this.init()
+    this.init()
     this.$axios({
         url:'/hotels/options'
       }).then(res=>{
