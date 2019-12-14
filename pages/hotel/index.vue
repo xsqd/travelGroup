@@ -264,7 +264,8 @@ export default {
         city: '',
         enterTime: '',
         leftTime: '',
-        scenic: ''
+        scenic: '',
+        person:0
       }
     }
   },
@@ -296,6 +297,7 @@ export default {
   },
   methods: {
     changeRouter () {},
+    // 区域城市选择全选
     initScenic () {
       this.ismyfocus = -1
       if (this.conditionsForm.enterTime) {
@@ -347,8 +349,35 @@ export default {
         console.log(this.hotels);
     })
     },
+    // 每次筛选调用这个函数请求数据
+    async postsdata(hotelsprice){
+      // console.log(this.$route.params)
+      // for(let key in this.conditionsForm){
+      //   if(!this.conditionsForm[key]){
+      //     delete this.conditionsForm[key]
+      //   }
+      // }
+      // console.log(this.conditionsForm)
+      let res = await this.$axios({
+        url:'/hotels',
+        query:hotelsprice
+      })
+      // 查看价格的数据
+      // console.log(res)
+      this.hotels=res.data
+      this.$message({
+          message: '搜索成功',
+          type: 'success'
+        })
+
+    },
     // 查看价格按钮
     selPrice () {
+      let personNumber = 0
+     for(let a of this.personNo.num.split(' ') ) {
+       personNumber+=(a[0]-0)
+     }
+     this.conditionsForm.person = personNumber
       if (this.conditionsForm.enterTime) {
         this.$router.push({
           path: '/hotel',
@@ -364,6 +393,7 @@ export default {
           }
         })
       }
+      this.postsdata(this.conditionsForm)
       this.ismyfocus = -1
     },
     async createMap (mapData) {
@@ -404,6 +434,8 @@ export default {
     changeSin (index, id) {
       this.ismyfocus = index
       this.scenicId = id
+      this.conditionsForm.scenic=id
+      console.log(this.conditionsForm)
       if (this.conditionsForm.enterTime) {
         this.$router.push({
           path: '/hotel',
@@ -503,6 +535,12 @@ export default {
         return cityList
       })
     }
+  },
+  watch: {
+    'this.$route.params'(){
+      console.log(this.$route.params)
+    },
+    deep:true
   }
 }
 </script>
