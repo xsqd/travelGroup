@@ -1,18 +1,22 @@
 <template>
   <div class="hotelDetail">
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/hotel' }">酒店</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/hotel' }">南京酒店</el-breadcrumb-item>
-      <el-breadcrumb-item>{{hotelData.name}}</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/hotel' }">
+        酒店
+      </el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/hotel' }">
+        南京酒店
+      </el-breadcrumb-item>
+      <el-breadcrumb-item>{{ hotelData.name }}</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="header">
-      <hotelDetailHeader :hotelData='hotelData'/>
+      <hotelDetailHeader :hotelData="hotelData" />
     </div>
     <div class="middle">
-      <hotelDetailMiddle :hotelData='hotelData'/>
+      <hotelDetailMiddle :hotelData="hotelData" />
     </div>
     <div class="footer">
-      <hotelDetailFooter/>
+      <hotelDetailFooter :hotelData="hotelData" />
     </div>
   </div>
 </template>
@@ -22,25 +26,25 @@ import hotelDetailHeader from '@/components/hotel/hotelDetailHeader.vue'
 import hotelDetailMiddle from '@/components/hotel/hotelDetailMiddle.vue'
 import hotelDetailFooter from '@/components/hotel/hotelDetailFooter.vue'
 export default {
-  data(){
+  components: {
+    hotelDetailHeader, hotelDetailFooter, hotelDetailMiddle
+  },
+  data () {
     return {
-      hotelData:[]
+      hotelData: []
     }
   },
-  components:{
-    hotelDetailHeader,hotelDetailFooter,hotelDetailMiddle
-  },
-  mounted(){
-    let {id} = this.$route.query
+  mounted () {
+    const { id } = this.$route.query
     // console.log(id);
     this.$axios({
-      url:`/hotels?id=${id}`
-    }).then(res=>{
+      url: `/hotels?id=${id}`
+    }).then((res) => {
       // console.log(res);
       this.hotelData = res.data.data[0]
     })
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

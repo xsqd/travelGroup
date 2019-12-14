@@ -14,10 +14,12 @@
             <span>离店时间: 12:00之前</span>
           </el-col>
           <el-col :span="5">
-            <span>2020年开业/2030年装修</span>
+            <!-- <span>{{ hotelData.creation_time }}年开业/{{ hotelData.renovat_time }}年装修</span> -->
+            <span>{{ hotelData.creation_time }}</span>/
+            <span>{{ hotelData.renovat_time }}</span>
           </el-col>
           <el-col :span="5">
-            <span>酒店规模: 250间客房</span>
+            <span>酒店规模: {{ hotelData.roomCount }}间客房</span>
           </el-col>
         </div>
       </el-row>
@@ -27,10 +29,10 @@
           <span>主要设施</span>
         </el-col>
         <div class="facility">
-          <span>外币兑换服务</span>
-          <span>电梯</span>
+          <span v-for="(item,index) in hotelData.hotelassets" :key="index">{{ item.name }}</span>
+          <!-- <span>电梯</span>
           <span>洗衣服务</span>
-          <span>热水壶</span>
+          <span>热水壶</span>-->
         </div>
       </el-row>
       <el-divider />
@@ -38,14 +40,14 @@
         <el-col :span="4">
           <span>停车服务</span>
         </el-col>
-        <div>-</div>
+        <span>{{ hotelData.parking }}</span>
       </el-row>
       <el-divider />
       <el-row :gutter="24">
         <el-col :span="4">
           <span>品牌信息</span>
         </el-col>
-        <div>-</div>
+        <span>{{ hotelData.hotelbrand && hotelData.hotelbrand.name }}</span>
       </el-row>
       <el-divider />
     </div>
@@ -55,9 +57,9 @@
       <div class="zuidi">
         <el-row :gutter="20">
           <el-col :span="4">
-            <p>总评数: 2</p>
-            <p>好评数: 5</p>
-            <p>差评数: 0</p>
+            <p>总评数: {{ hotelData.all_remarks }}</p>
+            <p>好评数: {{ hotelData.good_remarks }}</p>
+            <p>差评数: {{ hotelData.bad_remarks }}</p>
           </el-col>
           <el-col :span="5" class="grade">
             <el-rate
@@ -65,19 +67,51 @@
               disabled
               show-score
               text-color="#ff9900"
-              score-template="{value}"
+              score-template="{value}分"
             />
             <span class="tuiJian">推荐</span>
           </el-col>
           <div class="you">
             <el-col :span="3">
               <div>环境</div>
+              <el-progress
+                :percentage="8*10"
+                type="circle"
+                width="80"
+                color="#ff9900"
+                text-inside="true"
+                stroke-width="2"
+                class="progress"
+              />
+              <span class="score">{{ hotelData.stars }}分</span>
             </el-col>
             <el-col :span="3">
               <div>产品</div>
+              <el-progress
+                :percentage="8.5*10"
+                type="circle"
+                width="80"
+                color="#ff9900"
+                text-inside="true"
+                stroke-width="2"
+                class="progress2"
+              />
+              <span class="score2">{{ hotelData.stars }}分</span>
             </el-col>
             <el-col :span="3">
-              <div>服务</div>
+              <div>
+                服务
+              </div>
+              <el-progress
+                :percentage="8*10"
+                type="circle"
+                width="80"
+                color="#ff9900"
+                text-inside="true"
+                stroke-width="2"
+                class="progress3"
+              />
+              <span class="score3">{{ hotelData.stars }}分</span>
             </el-col>
           </div>
         </el-row>
@@ -88,10 +122,20 @@
 
 <script>
 export default {
+  props: ['hotelData'],
   data () {
     return {
-      // 评论星星分数
-      value: 3.5
+      // // 评论星星分数
+      value: ''
+      // hotUpdate: {
+      //   creationTime: ''
+      // }
+    }
+  },
+  watch: {
+    hotelData () {
+      // console.log(this.hotelData)
+      this.value = this.hotelData.stars
     }
   }
 }
@@ -142,11 +186,42 @@ export default {
     //评论右边的 产品 环境 服务 样式
     .you,
     .tuiJian {
+      position: relative;
       height: 74px;
       line-height: 74px;
       font-size: 16px;
       text-align: center;
       color: rgb(255, 153, 0);
+      .progress {
+        position: absolute;
+        top: 5px;
+        left: 406px;
+      }
+      .score{
+        position: absolute;
+        top: 24px;
+        left: 435px;
+      }
+      .progress2 {
+        position: absolute;
+        top: 5px;
+        left: 534px;
+      }
+      .score2{
+        position: absolute;
+        top: 24px;
+        left: 560px;
+      }
+      .progress3 {
+        position: absolute;
+        top: 5px;
+        left: 660px;
+      }
+      .score3{
+        position: absolute;
+        top: 24px;
+        left: 688px;
+      }
     }
   }
 }

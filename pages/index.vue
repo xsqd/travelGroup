@@ -54,7 +54,8 @@ export default {
           name:"酒店",
           placeholder:"请输入城市搜索酒店",
           pageUrl:"/hotel?city="
-        },{
+        },
+        {
           name:"机票",
           placeholder:"请输入出发地",
           pageUrl:"/air"
