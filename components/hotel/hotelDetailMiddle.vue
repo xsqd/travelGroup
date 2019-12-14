@@ -2,23 +2,23 @@
   <div class="main">
     <el-row type="flex" justify="space-between">
       <el-col class="map">
-        <div id="map"></div>
+        <div id="map"/>
       </el-col>
       <el-col style="width:330px">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="风景" name="first">
             <ul id="scenicList">
               <li v-for="(value,index) in poiList.scenic" :key="index" @mouseover="onhover(value)">
-                <span>{{value.name}}</span>
-                <span>{{value.distance1}}</span>
+                <span>{{ value.name }}</span>
+                <span>{{ value.distance1 }}</span>
               </li>
             </ul>
           </el-tab-pane>
           <el-tab-pane label="交通" name="second">
             <ul id="scenicList">
               <li v-for="(value,index) in poiList.traffic" :key="index" @mouseover="onhover(value)">
-                <span>{{value.name}}</span>
-                <span>{{value.distance1}}</span>
+                <span>{{ value.name }}</span>
+                <span>{{ value.distance1 }}</span>
               </li>
             </ul>
           </el-tab-pane>
@@ -30,16 +30,7 @@
 
 <script>
 export default {
-  props: ["hotelData"],
-  watch: {
-    hotelData() {
-      // console.log(this.hotelData);
-      this.position = [
-        this.hotelData.location.longitude,
-        this.hotelData.location.latitude
-      ];
-    }
-  },
+  props: ['hotelData'],
   data() {
     return {
       activeName: "first",
@@ -53,6 +44,34 @@ export default {
         traffic: "交通设施服务"
       }
     };
+  },
+  watch: {
+    hotelData() {
+      console.log(this.hotelData);
+      this.position = [
+        this.hotelData.location.longitude,
+        this.hotelData.location.latitude
+      ];
+    }
+  },
+  mounted() {
+    let this_ = this;
+    setTimeout(() => {
+      window.onLoad = function() {
+        // console.log(this_.position);
+        // console.log(this_.hotelData);
+        var map = new AMap.Map("map");
+        this_.map = map;
+        this_.hotelMarker()
+        this_.search("scenic");
+      };
+      var url =
+        "https://webapi.amap.com/maps?v=1.4.15&key=5b8d2153031276947f40a141875a9cb8&callback=onLoad";
+      var jsapi = document.createElement("script");
+      jsapi.charset = "utf-8";
+      jsapi.src = url;
+      document.head.appendChild(jsapi);
+    }, 2000);
   },
   methods: {
     //鼠标hover事件
@@ -187,27 +206,8 @@ export default {
       });
       map.add(marker);
     }
-  },
-  mounted() {
-    let this_ = this;
-    setTimeout(() => {
-      window.onLoad = function() {
-        // console.log(this_.position);
-        // console.log(this_.hotelData);
-        var map = new AMap.Map("map");
-        this_.map = map;
-        this_.hotelMarker()
-        this_.search("scenic");
-      };
-      var url =
-        "https://webapi.amap.com/maps?v=1.4.15&key=5b8d2153031276947f40a141875a9cb8&callback=onLoad";
-      var jsapi = document.createElement("script");
-      jsapi.charset = "utf-8";
-      jsapi.src = url;
-      document.head.appendChild(jsapi);
-    }, 1000);
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
