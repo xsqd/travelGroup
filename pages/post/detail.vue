@@ -38,9 +38,9 @@
       <!-- 评论 -->
       <h4>评论</h4>
       <!-- @回复框 -->
-      <div class="reply">
-        回复 @地球发动机
-        <span>x</span>
+      <div class="reply" v-if="userdata.follow">
+        {{ "回复@ "+NickName}}
+        <span @click="del">x</span>
       </div>
       <!-- 回复框 -->
       <el-form ref="form" :model="form">
@@ -56,6 +56,7 @@
             :action="$axios.defaults.baseURL+'/upload'"
             list-type="picture-card"
             :on-success="uploadImg"
+            :on-remove="handleRemove"
             name="files"
             :before-upload="screen"
           >
@@ -66,13 +67,18 @@
           </el-dialog>-->
         </el-col>
         <el-col :span="4" class="submit">
-          <el-button type="primary" class="sub">提交</el-button>
+          <el-button type="primary" class="sub" @click="setBlck">提交</el-button>
         </el-col>
       </el-row>
       <!-- 递归组件 -->
-      <el-row>
-        <!-- <PostComment :replyData="replyData[0]"></PostComment> -->
-      </el-row>
+      <div class="postcomenttop">
+        <PostComment
+          :replyData="item"
+          @userFollow="userFollow"
+          v-for="(item,index) in replyData"
+          :key="index"
+        ></PostComment>
+      </div>
     </div>
     <div class="right">
       <div class="title">相关攻略</div>
@@ -88,6 +94,11 @@ import PostRom from "@/components/post/postRom.vue";
 import PostComment from "@/components/post/postComment.vue";
 
 export default {
+  watch: {
+    userdata() {
+      console.log(this.userdata);
+    }
+  },
   data() {
     return {
       data: {
@@ -97,24 +108,87 @@ export default {
         name: ""
       },
       url: "",
-      replyData:''
+      replyData: [
+        {
+          account: {}
+        }
+      ],
+      userdata: {
+        follow: "",
+        content: "",
+        pics: [],
+        post: 6
+      },
+      NickName: ""
     };
   },
   methods: {
-    uploadImg(res) {
-      console.log(res);
-      this.url = res[0].url;
+    //封装 评论ajax
+    getReplay() {
+      this.$axios({
+        url: `/posts/comments`,
+        params: {
+          post: 6, //文章id
+          _limit: 3,
+          _start: 0
+        }
+      }).then(res => {
+        // console.log(res);
+        this.replyData = res.data.data;
+        console.log(this.replyData);
+      });
     },
+    //上传图片
+    uploadImg(res) {
+      this.userdata.pics.push(res[0]);
+      console.log(this.userdata.pics);
+    },
+    //删除图片
+    handleRemove(a){
+      console.log(a);
+    },
+    //判断上传文件类型
     screen(flies) {
-      // console.log(flies);
       let table = flies.type.slice(0, 5);
-      // console.log(table);
       if (table === "image") {
         return true;
       } else {
         this.$message.success("文件上传失败");
         return false;
       }
+    },
+    //接收子组件传过来的数据
+    userFollow(s) {
+      console.log(s);
+      this.userdata.follow = s.id;
+      this.NickName = s.nickname;
+      console.log(this.userdata);
+    },
+    //发送评论
+    setBlck() {
+      if (this.userdata.follow === "") {
+        delete this.userdata.follow;
+      }
+      if (!this.userdata.pics.length) {
+        delete this.userdata.pics;
+      }
+      this.$axios({
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        },
+        method: "post",
+        url: `/comments`,
+        data: this.userdata
+      }).then(res => {
+        console.log(res);
+         this.getReplay()
+
+      });
+    },
+    //@按钮的删除
+    del() {
+      this.userdata.follow = "";
     }
   },
   //组件
@@ -130,23 +204,13 @@ export default {
       url: `/posts/?id=4`
     }).then(res => {
       this.data = res.data.data[0];
-
+      console.log(res);
+      console.log(this.data);
       // console.log(this.data.likeIds.length);
     });
     //这个是评论页面数据
-     this.$axios({
-       url:`/posts/comments`,
-       params:{
-         post:  4  ,//文章id
-         _limit: 3 ,
-         _start:0,
-       }
-     }).then((res)=>{
-      console.log(res);
-      this.replyData = res.data.data
-      console.log(this.replyData);
-     })
-  },
+    this.getReplay()
+  }
 };
 </script>
 
@@ -250,6 +314,15 @@ export default {
         &:hover {
           color: #fff;
           background-color: #aaa;
+        }
+      }
+    }
+    .postcomenttop {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      /deep/.PostComment:last-child {
+        .commentlist {
+          border-bottom: none !important;
         }
       }
     }

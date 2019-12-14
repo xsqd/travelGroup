@@ -7,18 +7,18 @@
           {{replyData.account.nickname}}
           <span>{{ replyData.account.created_at |gettime}}</span>
         </p>
-        <span>1</span>
+        <span>{{replyData.level}}</span>
       </div>
       <div class="content">
-        <PostCommentItem></PostCommentItem>
+        <PostCommentItem @follow="follow" v-if="replyData.parent" :parent="replyData.parent "></PostCommentItem>
         <div class="userComment clearfix">
-          <p>123</p>
-          <div class="commentImg" v-for="(v,i) in ['','']" :key="i">
-            <img src="http://img3.imgtn.bdimg.com/it/u=2455100451,3980453752&fm=26&gp=0.jpg" alt />
+          <p>{{replyData.content }}</p>
+          <div class="commentImg" v-for="(item,index) in replyData.pics" :key="index">
+            <img :src="$axios.defaults.baseURL+item.url" alt />
           </div>
         </div>
         <p class="comtent-huifu">
-          <span>回复</span>
+          <span @click="back">回复</span>
         </p>
       </div>
     </div>
@@ -44,6 +44,14 @@ export default {
     gettime(e) {
       return moment(e).format("YYYY-MM-DD HH:mm:ss"); //2014-09-24 23:36:09
     }
+  },
+  methods:{
+      back(){
+      this.$emit("userFollow",{id:this.replyData.id,nickname:this.replyData.account.nickname})
+      },
+      follow(s){
+          this.$emit("userFollow",s)
+      }
   }
 };
 </script>
@@ -60,8 +68,6 @@ export default {
   zoom: 1;
 }
 .PostComment {
-  margin-top: 20px;
-  border: 1px solid #ddd;
   .commentlist {
     border-bottom: 1px dashed #ddd;
     padding: 20px 20px 5px;
@@ -125,8 +131,6 @@ export default {
       }
     }
   }
-  .commentlist:last-child {
-    border-bottom: none;
-  }
+  
 }
 </style>
