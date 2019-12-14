@@ -38,11 +38,9 @@
       <!-- 评论 -->
       <h4>评论</h4>
       <!-- @回复框 -->
-      <div class="reply">
-        回复 @地球发动机
-        <span>
-          x
-        </span>
+      <div class="reply" v-if="userdata.follow">
+        {{ "回复@ "+NickName}}
+        <span @click="del">x</span>
       </div>
       <!-- 回复框 -->
       <el-form ref="form" :model="form">
@@ -51,13 +49,14 @@
         </el-form-item>
       </el-form>
       <!-- 上传文件 -->
-      <el-row type="flex" justify="space-between" class="">
+      <el-row type="flex" justify="space-between" class="botom">
         <el-col :span="20">
           <el-upload
             :limit="3"
             :action="$axios.defaults.baseURL+'/upload'"
             list-type="picture-card"
             :on-success="uploadImg"
+            :on-remove="handleRemove"
             name="files"
             :before-upload="screen"
           >
@@ -68,12 +67,18 @@
           </el-dialog>-->
         </el-col>
         <el-col :span="4" class="submit">
-          <el-button type="primary" class="sub">提交</el-button>
+          <el-button type="primary" class="sub" @click="setBlck">提交</el-button>
         </el-col>
       </el-row>
-      <el-row>
-        <PostComment></PostComment>
-      </el-row>
+      <!-- 递归组件 -->
+      <div class="postcomenttop">
+        <PostComment
+          :replyData="item"
+          @userFollow="userFollow"
+          v-for="(item,index) in replyData"
+          :key="index"
+        ></PostComment>
+      </div>
     </div>
     <div class="right">
       <div class="title">相关攻略</div>
@@ -89,6 +94,11 @@ import PostRom from "@/components/post/postRom.vue";
 import PostComment from "@/components/post/postComment.vue";
 
 export default {
+  watch: {
+    userdata() {
+      console.log(this.userdata);
+    }
+  },
   data() {
     return {
       data: {
@@ -97,24 +107,88 @@ export default {
       form: {
         name: ""
       },
-      url:''
+      url: "",
+      replyData: [
+        {
+          account: {}
+        }
+      ],
+      userdata: {
+        follow: "",
+        content: "",
+        pics: [],
+        post: 6
+      },
+      NickName: ""
     };
   },
   methods: {
-    uploadImg(res) {
-      console.log(res);
-      this.url = res[0].url
+    //封装 评论ajax
+    getReplay() {
+      this.$axios({
+        url: `/posts/comments`,
+        params: {
+          post: 6, //文章id
+          _limit: 3,
+          _start: 0
+        }
+      }).then(res => {
+        // console.log(res);
+        this.replyData = res.data.data;
+        console.log(this.replyData);
+      });
     },
-    screen(flies){
-      // console.log(flies);
-      let  table = flies.type.slice(0,5)
-      // console.log(table);
-      if(table==="image"){
-        return true
-      }else{
-        this.$message.success("文件上传失败")
-         return false
+    //上传图片
+    uploadImg(res) {
+      this.userdata.pics.push(res[0]);
+      console.log(this.userdata.pics);
+    },
+    //删除图片
+    handleRemove(a){
+      console.log(a);
+    },
+    //判断上传文件类型
+    screen(flies) {
+      let table = flies.type.slice(0, 5);
+      if (table === "image") {
+        return true;
+      } else {
+        this.$message.success("文件上传失败");
+        return false;
       }
+    },
+    //接收子组件传过来的数据
+    userFollow(s) {
+      console.log(s);
+      this.userdata.follow = s.id;
+      this.NickName = s.nickname;
+      console.log(this.userdata);
+    },
+    //发送评论
+    setBlck() {
+      if (this.userdata.follow === "") {
+        delete this.userdata.follow;
+      }
+      if (!this.userdata.pics.length) {
+        delete this.userdata.pics;
+      }
+      this.$axios({
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        },
+        method: "post",
+        url: `/comments`,
+        data: this.userdata
+      }).then(res => {
+        console.log(res);
+         this.getReplay()
+
+      });
+    },
+    //@按钮的删除
+    del() {
+      this.userdata.follow = "";
     }
   },
   //组件
@@ -125,22 +199,24 @@ export default {
   //生命钩子函数
   created() {
     // /post/detail?id=4
+    //这个是页面内容数据
     this.$axios({
       url: `/posts/?id=4`
     }).then(res => {
       this.data = res.data.data[0];
-      
+      console.log(res);
+      console.log(this.data);
       // console.log(this.data.likeIds.length);
     });
-  },
-  mounted() {
-    console.log(12312);
+    //这个是评论页面数据
+    this.getReplay()
   }
 };
 </script>
 
 <style lang="less" scoped>
 @color: #aaa;
+@mhb: 20px;
 * {
   box-sizing: border-box;
 }
@@ -195,7 +271,7 @@ export default {
     }
     h4 {
       font-size: 18px;
-      margin-bottom: 20px;
+      margin-bottom: @mhb;
       font-weight: normal;
     }
     .submit {
@@ -212,14 +288,44 @@ export default {
     /deep/.el-input__inner {
       height: 60px;
     }
-      .reply{
-      font-size: 12px;
+    .reply {
+      position: relative;
+      font-size: 10px;
       padding: 0 10px;
       width: 130px;
       height: 30px;
-      text-align: center;
+      margin-bottom: @mhb;
+      line-height: 30px;
+      border: 1px solid #dddddd;
+      background-color: #f4f4f5;
+      border-radius: 3px;
+      span {
+        line-height: 10px;
+        text-align: center;
+        font-size: 8px;
+        position: absolute;
+        top: 9px;
+        right: 6px;
+        color: #aaa;
+        width: 12px;
+        height: 12px;
+        float: right;
+        border-radius: 50%;
+        &:hover {
+          color: #fff;
+          background-color: #aaa;
+        }
+      }
+    }
+    .postcomenttop {
+      margin-top: 20px;
       border: 1px solid #ccc;
-  }
+      /deep/.PostComment:last-child {
+        .commentlist {
+          border-bottom: none !important;
+        }
+      }
+    }
   }
   .right {
     padding-left: 10px;

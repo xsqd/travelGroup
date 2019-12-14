@@ -4,7 +4,8 @@ export const state = () => ({
   userInfo:{
     token:"",
     user:{}
-  }
+  },
+  userFollow:''
 })
 
 export const mutations= {
@@ -19,6 +20,9 @@ export const mutations= {
         localStorage.removeItem("userInfo");
     }
     state.userInfo = {};
+},
+setuserFollow(state,data){
+  state.userFollow = data;
 }
 }
 export const actions = {

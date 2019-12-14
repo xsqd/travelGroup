@@ -156,15 +156,6 @@
         </ul>
       </el-col>
     </el-row>
-    <div class="pagination-box">
-      <el-pagination
-        small
-        layout="prev, pager, next"
-        :total="50"
-        prev-text='< 上一页'
-        next-text='下一页 >'>
-      </el-pagination>
-    </div>
   </div>
 </template>
 
@@ -175,6 +166,9 @@ export default {
     return {
       value: 4000
     };
+  },
+  methods:{
+    
   }
 };
 </script>
@@ -243,10 +237,5 @@ ul>li{
 }
 .larger {
   font-size: larger;
-}
-.pagination-box{
-  display: flex;
-  justify-content: flex-end;
-  padding: 20px 0 40px;
 }
 </style>
