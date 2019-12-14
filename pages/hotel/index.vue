@@ -155,7 +155,21 @@
           </el-col>
         </el-row>
       </div>
-      <HotelFilters :hotelInfo='hotels' :options='options'/>
+      <div>
+        <HotelFilters :hotelInfo='hotels' :options='options'/>
+        <div class="pagination-box">
+          <el-pagination
+            small
+            :page-size="limit"
+            :current-page="pageIndex"
+            @current-change="changePageIndex"
+            layout="prev, pager, next"
+            :total="hotels.total"
+            prev-text='< 上一页'
+            next-text='下一页 >'>
+          </el-pagination>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -181,6 +195,9 @@ export default {
   },
   data () {
     return {
+      pageIndex:1,
+      start:0,
+      limit:10,
       hotels:{},
       options:{},
       isareahidden: true,
@@ -257,24 +274,35 @@ export default {
   },
   computed: {},
   async mounted () {
-   await this.getCity(this.destinationCity)
-      this.$axios({
-        url:'/hotels',
-        params:{
-          city:this.conditionsForm.city
-        }
-      }).then(res=>{
-        this.hotels=res.data
-        console.log(this.hotels);
-      })
-    ,
+    await this.getCity(this.destinationCity)
+    await this.init()
     this.$axios({
         url:'/hotels/options'
       }).then(res=>{
         this.options=res.data.data
-      })
+    })
   },
   methods: {
+    init(){
+       this.$axios({
+        url:'/hotels',
+        params:{
+          city:this.conditionsForm.city,
+          _start:this.start,
+          _limit:this.limit
+        }
+    }).then(res=>{
+        this.hotels=res.data
+        // console.log(this.hotels);
+    })
+    },
+    //分页
+    changePageIndex(val){
+      // console.log(`当前页: ${val}`)
+      this.pageIndex=val
+      this.start=(val-1)*5
+      this.init()
+    },
     shouArea () {},
     getpersonNo () {
       this.personNo.num = ''
@@ -296,23 +324,23 @@ export default {
       // console.log(this.selDate)
       this.conditionsForm.enterTime = this.selDate[0]
       this.conditionsForm.leftTime = this.selDate[1]
-      console.log(this.conditionsForm)
+      // console.log(this.conditionsForm)
     },
     selectDepartCity (value) {
-      console.log(value)
+      // console.log(value)
       this.conditionsForm.city = value.id
       this.destinationCityData = value
     },
     // 输入返回，城市列表
     async getCity (value, showList) {
       const cityList = await this.getCityList(value)
-      console.log(cityList)
+      // console.log(cityList)
       if (showList) {
         showList(cityList)
       }
       this.conditionsForm.city = cityList[0].id
-      console.log('下面是城市Id')
-      console.log(this.conditionsForm.city)
+      // console.log('下面是城市Id')
+      // console.log(this.conditionsForm.city)
       this.destinationCityData = cityList[0]
     },
 
@@ -323,7 +351,7 @@ export default {
           name: value
         }
       }).then((res) => {
-        console.log(res)
+        // console.log(res)
         const { data } = res.data
         const citys = data.map((e) => {
           return {
@@ -341,6 +369,11 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.pagination-box{
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 0 40px;
+}
 //上收
 .iup {
   transform: rotate(270deg);
