@@ -43,12 +43,12 @@
         <span>{{ hotelData.parking }}</span>
       </el-row>
       <el-divider />
-      <span :gutter="24">
+      <el-row :gutter="24">
         <el-col :span="4">
           <span>品牌信息</span>
         </el-col>
         <span>{{ hotelData.hotelbrand && hotelData.hotelbrand.name }}</span>
-      </span>
+      </el-row>
       <el-divider />
     </div>
     <!-- 评论区 -->
