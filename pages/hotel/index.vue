@@ -295,6 +295,9 @@ export default {
       for (let a of this.personNo.num.split(' ')) {
         personNumber+=(a[0]-0)
       }
+      
+      // this.hotelsprice._start=this.start,
+      // this.hotelsprice._limit=this.limit
       this.hotelsprice.person = personNumber
       this.hotelsprice.enterTime = this.selDate[0]
       this.hotelsprice.leftTime = this.selDate[1]
@@ -306,6 +309,11 @@ export default {
       })
       // 查看价格的数据
       console.log(res)
+      this.hotels=res.data
+      this.$message({
+          message: '搜索成功',
+          type: 'success'
+        })
     },
     init(){
        this.$axios({
@@ -317,7 +325,7 @@ export default {
         }
     }).then(res=>{
         this.hotels=res.data
-        // console.log(this.hotels);
+        console.log(this.hotels);
     })
     },
     //分页
