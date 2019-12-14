@@ -300,24 +300,24 @@ export default {
   methods: {
     // 根据条件筛选酒店
     filterHotel (value) {
-      const condition = {
-        assets: [],
-        brand: [],
-        levels: [],
-        types: []
-      }
-      const newCodition = {}
-      condition.forEach((key) => {
-        if(condition[key]){
-          newCodition.push(
-            key:condition[key]
-          )
-        }
-      })
-      const hotels = this.hotels
-      const newHotels = hotels.map((value, index) => {
+      // const condition = {
+      //   assets: [],
+      //   brand: [],
+      //   levels: [],
+      //   types: []
+      // }
+      // const newCodition = {}
+      // condition.forEach((key) => {
+      //   if(condition[key]){
+      //     newCodition.push(
+      //       key:condition[key]
+      //     )
+      //   }
+      // })
+      // const hotels = this.hotels
+      // const newHotels = hotels.map((value, index) => {
 
-      })
+      // })
     },
     changeRouter () {},
     initScenic () {
