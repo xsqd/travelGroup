@@ -20,7 +20,7 @@
               不限
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
-            <el-dropdown-menu slot="dropdown" style="width:150px;">
+            <el-dropdown-menu slot="dropdown">
               <el-dropdown-item v-for="(item,index) in options.levels" :key="index">
                 <i class="iconfont iconcircle"></i>{{item.name}}
               </el-dropdown-item>
@@ -194,6 +194,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.el-dropdown-menu{
+  width:180px !important;
+}
 .filters-top {
   padding: 5px 0;
   border: 1px solid #ddd;

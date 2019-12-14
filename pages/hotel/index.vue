@@ -338,6 +338,39 @@ export default {
         })
       }
     },
+    //   async selPrice(){
+    //   // this.hotelsprice._start=this.start,
+    //   // this.hotelsprice._limit=this.limit
+    //   this.hotelsprice.person = personNumber
+    //   this.hotelsprice.enterTime = this.selDate[0]
+    //   this.hotelsprice.leftTime = this.selDate[1]
+    //   this.hotelsprice.name_contains = this.destinationCity
+    //   console.log(this.hotelsprice)
+    //   let res = await this.$axios({
+    //     url:'/hotels',
+    //     query:this.hotelsprice
+    //   })
+    //   // 查看价格的数据
+    //   console.log(res)
+    //   this.hotels=res.data
+    //   this.$message({
+    //       message: '搜索成功',
+    //       type: 'success'
+    //     })
+    // },
+    init(){
+       this.$axios({
+        url:'/hotels',
+        params:{
+          city:this.conditionsForm.city,
+          _start:this.start,
+          _limit:this.limit
+        }
+    }).then(res=>{
+        this.hotels=res.data
+        console.log(this.hotels);
+    })
+    },
     // 查看价格按钮
     selPrice () {
       if (this.conditionsForm.enterTime) {
