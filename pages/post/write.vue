@@ -73,20 +73,21 @@ export default {
         city: ''
       },
       // draftList: [],
+      id: '',
       config: {
         modules: {
           // 工具栏
           toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
             [{ 'header': 1 }, { 'header': 2 }],
-            ['image', 'video']
+            ['image']
           ]
         },
         // 主题
         theme: 'snow',
         // 上传图片的配置
         uploadImage: {
-          showProgress: false,
+          // showProgress: false,
           url: `${this.$axios.defaults.baseURL}/upload`,
           name: 'files',
           hearders: {
@@ -98,11 +99,11 @@ export default {
             const file = res.data[0]
             insert(this.$axios.defaults.baseURL + file.url)
           }
-        },
+        }
 
         // 上传视频的配置
-        uploadVideo: {
-          showProgress: false,
+        /* uploadVideo: {
+          // showProgress: false,
           url: `${this.$axios.defaults.baseURL}/upload`,
           name: 'files',
           hearders: {
@@ -112,7 +113,7 @@ export default {
             const file = res.data[0]
             insert(this.$axios.defaults.baseURL + file.url)
           }
-        }
+        } */
       }
     }
   },
@@ -131,13 +132,17 @@ export default {
     }
   },
   methods: {
+    // 获取草稿
     getDraft (index) {
+      this.id = index
+      console.log(this.id)
       this.form = { ...this.$store.state.history.postList[index] }
       this.$refs.vueEditor.editor.root.innerHTML = this.form.content
     },
+    // 保存草稿
     addDraft () {
       this.form.content = this.$refs.vueEditor.editor.root.innerHTML
-      this.$store.commit('history/addDraftList', this.form)
+      this.$store.commit('history/addDraftList', { form: this.form, id: this.id })
       // 清空输入框
       this.form = {
         title: '',
@@ -151,8 +156,8 @@ export default {
         type: 'success',
         message: '保存成功'
       })
-      // this.draftList = this.$store.state.history.postList
-      // console.log(this.draftList)
+      // 每次保存草稿就把id删除
+      this.id = ''
     },
     async getCityList (value, showList) {
       // 获取真正的搜索建议
@@ -160,9 +165,9 @@ export default {
       // 准备建议数据,然后时候 showList 回调返回到 组件当中显示
       // 为了避免用户直接输入后啥都不干,直接将输入框失去焦点
       // 可以默认将城市列表第一个 name 放入 form 当中
-      if (cityList.length > 0) {
-        this.form.city = cityList[0].name
-      }
+      // if (cityList.length > 0) {
+      //   this.form.city = cityList[0].name
+      // }
       showList(cityList)
     },
     searchCity (value) {
@@ -197,10 +202,13 @@ export default {
     selectCity (item) {
       this.form.city = item.name
     },
+    // 发布文章
     addPost () {
     // 获取富文本框的内容
       this.form.content = this.$refs.vueEditor.editor.root.innerHTML
       console.log(this.form)
+      // 删除this.form里的time属性
+      delete this.form.time
       // 获取token
       const token = this.$store.state.user.userInfo.token
 
@@ -212,6 +220,14 @@ export default {
         })
         this.$router.push({
           path: '/user/login'
+        })
+        return
+      }
+      // 如果输入框为空，则不发送请求
+      if (this.form.title === '' || this.form.city === '') {
+        this.$message({
+          type: 'warning',
+          message: '请填写完整'
         })
         return
       }
@@ -288,6 +304,9 @@ export default {
         margin-bottom: 5px;
         .draft-post-title{
           cursor: pointer;
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space: nowrap;
           &:hover{
             color: orange;
             text-decoration: underline;

@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <el-row>
-      <h4>古南都大桥饭店</h4>
+      <h4>{{hotelData.name}}</h4>
       <i class="iconfont iconhuangguan"></i>
       <i class="iconfont iconhuangguan"></i>
       <i class="iconfont iconhuangguan"></i>
@@ -9,34 +9,29 @@
       <i class="iconfont iconhuangguan"></i>
     </el-row>
     <el-row>
-      <span>gu nan du da qiao hotel</span>
+      <span>{{hotelData.alias}}</span>
     </el-row>
     <el-row>
       <span class="iconfont iconlocation"></span>
-      <span>建宁路255号(紧邻长江大桥)</span>
+      <span>{{hotelData.address}}</span>
     </el-row>
     <el-row type="flex" class="imgItem" justify="space-between">
       <el-col>
-        <img src="http://157.122.54.189:9093/images/hotel-pics/1.jpeg" alt />
+        <img :src="bigSrc" alt />
       </el-col>
       <el-col>
-        <img src="http://157.122.54.189:9093/images/hotel-pics/1.jpeg" alt />
-        <img src="http://157.122.54.189:9093/images/hotel-pics/1.jpeg" alt />
-        <img src="http://157.122.54.189:9093/images/hotel-pics/1.jpeg" alt />
-        <img src="http://157.122.54.189:9093/images/hotel-pics/1.jpeg" alt />
-        <img src="http://157.122.54.189:9093/images/hotel-pics/1.jpeg" alt />
-        <img src="http://157.122.54.189:9093/images/hotel-pics/1.jpeg" alt />
+        <img :src="value.src" alt @click="setBigSrc(value.src)" v-for="(value,index) in imgs" :key="index"/>
       </el-col>
     </el-row>
     <el-row>
-      <el-table :data="tableData" style="width: 100%" @row-click='clickrow'>
-        <el-table-column prop="company" label="价格来源" width="420px"></el-table-column>
-        <el-table-column prop="size" label="低价房型" width="420px"></el-table-column>
+      <el-table :data="hotelData.products" style="width: 100%" @row-click='clickrow'>
+        <el-table-column prop="name" label="价格来源" width="420px"></el-table-column>
+        <el-table-column prop="bestType" label="低价房型" width="420px"></el-table-column>
         <el-table-column prop="price" label="最低价格/每晚" width="160px">
         <template slot-scope="scope">
           <span>
             <i class="height-light">
-            {{scope.row.price}}
+            {{"￥"+scope.row.price}}
           </i>
           </span>
           起
@@ -52,8 +47,29 @@
 
 <script>
 export default {
+  props:['hotelData'],
   data() {
     return {
+      imgs:[
+        {
+          src:'http://157.122.54.189:9093/images/hotel-pics/1.jpeg'
+        },
+        {
+          src:'http://157.122.54.189:9093/images/hotel-pics/2.jpeg'
+        },
+        {
+          src:'http://157.122.54.189:9093/images/hotel-pics/3.jpeg'
+        },
+        {
+          src:'http://157.122.54.189:9093/images/hotel-pics/4.jpeg'
+        },
+        {
+          src:'http://157.122.54.189:9093/images/hotel-pics/5.jpeg'
+        },
+        {
+          src:'http://157.122.54.189:9093/images/hotel-pics/6.jpeg'
+        },
+      ],
       tableData: [
         {
           company: "携程",
@@ -70,13 +86,20 @@ export default {
           size: "高级大床房A",
           price: "￥220"
         }
-      ]
+      ],
+      bigSrc:'http://157.122.54.189:9093/images/hotel-pics/1.jpeg'
     };
   },
   methods:{
+    setBigSrc(src){
+      this.bigSrc = src
+    },
     clickrow(row, column, event){
       location.href = "https://hotels.ctrip.com/hotel/694679.html"
     }
+  },
+  mounted(){
+    console.log(this.hotelData);
   }
 };
 </script>
@@ -116,6 +139,7 @@ export default {
         height: 110px;
         margin-left: 22px;
         margin-bottom: 10px;
+        cursor: pointer;
       }
       img:nth-child(5),
       img:nth-child(6) {
