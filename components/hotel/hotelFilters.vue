@@ -15,13 +15,13 @@
       <el-col :span="6">
         <div class="live-filters">
           <div class="live">住宿等级</div>
-          <el-dropdown>
+          <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              不限
+              {{placeholder}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item v-for="(item,index) in options.levels" :key="index">
+              <el-dropdown-item v-for="(item,index) in options.levels" :key="index" :command="item.name">
                 <i class="iconfont iconcircle"></i>{{item.name}}
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -31,13 +31,13 @@
       <el-col :span="6">
         <div class="live-filters">
           <div class="live">住宿类型</div>
-          <el-dropdown>
+          <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              不限
+              {{placeholder}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" style="width:150px;">
-              <el-dropdown-item v-for="(item,index) in options.types" :key="index">
+              <el-dropdown-item v-for="(item,index) in options.types" :key="index" :command="item.name">
                 <i class="iconfont iconcircle"></i>{{item.name}}
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -47,13 +47,13 @@
       <el-col :span="6">
         <div class="live-filters">
           <div class="live">酒店设施</div>
-          <el-dropdown>
+          <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              不限
+              {{placeholder}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" style="width:150px;">
-              <el-dropdown-item v-for="(item,index) in options.assets" :key="index">
+              <el-dropdown-item v-for="(item,index) in options.assets" :key="index" :command="item.name">
                 <i class="iconfont iconcircle"></i>{{item.name}}
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -63,13 +63,13 @@
       <el-col :span="6">
         <div class="live-filters" style="border:none;">
           <div class="live">酒店品牌</div>
-          <el-dropdown>
+          <el-dropdown >
             <span class="el-dropdown-link">
-              不限
+              {{placeholder}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" style="width:150px;overflow:auto;max-height:230px;">
-              <el-dropdown-item v-for="(item,index) in options.brands" :key="index">
+              <el-dropdown-item v-for="(item,index) in options.brands" :key="index" :command="item.name">
                 <i class="iconfont iconcircle"></i>{{item.name}}
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -184,11 +184,15 @@ export default {
   props:['hotelInfo','options'],
   data() {
     return {
-      value: 4000
+      value: 4000,
+      placeholder:'不限'
     };
   },
   methods:{
-    
+    handleCommand(command){
+      console.log(command)
+      this.placeholder=command
+    }
   }
 };
 </script>

@@ -165,7 +165,20 @@
           </el-col>
         </el-row>
       </div>
-      <HotelFilters :hotelInfo="hotels" :options="options" />
+      <div>
+        <HotelFilters :hotelInfo="hotels" :options="options" />
+        <div class="pagination-box">
+          <el-pagination
+            small
+            @current-change="handleCurrentChange"
+            layout="prev, pager, next"
+            prev-text='<上一页'
+            next-text='下一页>'
+            :page-size="limit"
+            :total="hotels.total">
+          </el-pagination>
+        </div>
+      </div>
     </div>
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=b90f3894dde280b2f3ac4318bbf68e10" />
   </div>
@@ -191,10 +204,12 @@ export default {
   },
   data () {
     return {
+      start:0,
+      limit:10,
       scenicId: '',
       mapData: [{}],
       ismyfocus: -1,
-      hotels: [{}],
+      hotels: {},
       options: {},
       isareahidden: true,
       isShowperson: false,
@@ -264,7 +279,8 @@ export default {
         city: '',
         enterTime: '',
         leftTime: '',
-        scenic: ''
+        scenic: '',
+        person:0
       }
     }
   },
@@ -272,20 +288,24 @@ export default {
   async mounted () {
     await this.getCity(this.destinationCity)
     // console.log('这是酒店')
-
-    await this.$axios({
-      url: '/hotels',
-      params: {
-        city: this.conditionsForm.city
-      }
-    }).then((res) => {
-      const data = res.data
-      // 上面为传送数据部分
-      this.createMap(data.data)
-      this.hotels = data
-      return data
-    })
-
+    this.$router.push({
+      path: '/hotel',
+      query: { city: this.conditionsForm.city
+      } })
+    // await this.$axios({
+    //   url: '/hotels',
+    //   params: {
+    //     city: this.conditionsForm.city
+    //   }
+    // }).then((res) => {
+    //   const data = res.data
+    //   // 上面为传送数据部分
+    //   console.log(data);
+    //   this.createMap(data.data)
+    //   this.hotels = data
+    //   return data
+    // })
+    await this.init()
     this.$axios({
       url: '/hotels/options'
     }).then((res) => {
@@ -295,7 +315,35 @@ export default {
     })
   },
   methods: {
+    //分页
+    handleCurrentChange(val){
+      console.log(`当前页: ${val}`)
+      this.start=(val-1)*5
+      this.init()
+    },
+    // 根据条件筛选酒店
+    filterHotel (value) {
+      // const condition = {
+      //   assets: [],
+      //   brand: [],
+      //   levels: [],
+      //   types: []
+      // }
+      // const newCodition = {}
+      // condition.forEach((key) => {
+      //   if(condition[key]){
+      //     newCodition.push(
+      //       key:condition[key]
+      //     )
+      //   }
+      // })
+      // const hotels = this.hotels
+      // const newHotels = hotels.map((value, index) => {
+
+      // })
+    },
     changeRouter () {},
+    // 区域城市选择全选
     initScenic () {
       this.ismyfocus = -1
       if (this.conditionsForm.enterTime) {
@@ -313,9 +361,72 @@ export default {
           }
         })
       }
+      // 根据条件筛选数据渲染
+      this.postsdata(this.conditionsForm)
+    },
+    //   async selPrice(){
+    //   // this.hotelsprice._start=this.start,
+    //   // this.hotelsprice._limit=this.limit
+    //   this.hotelsprice.person = personNumber
+    //   this.hotelsprice.enterTime = this.selDate[0]
+    //   this.hotelsprice.leftTime = this.selDate[1]
+    //   this.hotelsprice.name_contains = this.destinationCity
+    //   console.log(this.hotelsprice)
+    //   let res = await this.$axios({
+    //     url:'/hotels',
+    //     query:this.hotelsprice
+    //   })
+    //   // 查看价格的数据
+    //   console.log(res)
+    //   this.hotels=res.data
+    //   this.$message({
+    //       message: '搜索成功',
+    //       type: 'success'
+    //     })
+    // },
+    init(){
+       this.$axios({
+        url:'/hotels',
+        params:{
+          city:this.conditionsForm.city,
+          _start:this.start,
+          _limit:this.limit
+        }
+    }).then(res=>{
+        this.hotels=res.data
+        console.log(this.hotels);
+        this.createMap(res.data.data)
+    })
+    },
+    // 每次筛选调用这个函数请求数据
+    async postsdata(hotelsprice){
+      // console.log(this.$route.params)
+      // for(let key in this.conditionsForm){
+      //   if(!this.conditionsForm[key]){
+      //     delete this.conditionsForm[key]
+      //   }
+      // }
+      // console.log(this.conditionsForm)
+      let res = await this.$axios({
+        url:'/hotels',
+        query:hotelsprice
+      })
+      // 查看价格的数据
+      // console.log(res)
+      this.hotels=res.data
+      this.$message({
+          message: '搜索成功',
+          type: 'success'
+        })
+
     },
     // 查看价格按钮
     selPrice () {
+      let personNumber = 0
+     for(let a of this.personNo.num.split(' ') ) {
+       personNumber+=(a[0]-0)
+     }
+     this.conditionsForm.person = personNumber
       if (this.conditionsForm.enterTime) {
         this.$router.push({
           path: '/hotel',
@@ -331,6 +442,8 @@ export default {
           }
         })
       }
+      // 根据条件筛选数据渲染
+      this.postsdata(this.conditionsForm)
       this.ismyfocus = -1
     },
     async createMap (mapData) {
@@ -371,6 +484,8 @@ export default {
     changeSin (index, id) {
       this.ismyfocus = index
       this.scenicId = id
+      this.conditionsForm.scenic=id
+      console.log(this.conditionsForm)
       if (this.conditionsForm.enterTime) {
         this.$router.push({
           path: '/hotel',
@@ -388,6 +503,8 @@ export default {
           }
         })
       }
+      // 根据条件筛选数据渲染
+       this.postsdata(this.conditionsForm)
     },
     shouArea () {},
     getpersonNo () {
@@ -412,7 +529,7 @@ export default {
       this.conditionsForm.leftTime = this.selDate[1]
       console.log(this.conditionsForm)
     },
-    selectDepartCity (value) {
+    async selectDepartCity (value) {
       // console.log(value)
       this.conditionsForm.city = value.id
       if (this.conditionsForm.enterTime) {
@@ -433,6 +550,18 @@ export default {
       this.destinationCityData = value
       console.log('这是选择后城市数据')
       console.log(this.destinationCityData)
+      await this.$axios({
+        url: '/hotels',
+        params: {
+          city: this.conditionsForm.city
+        }
+      }).then((res) => {
+        const data = res.data
+        // 上面为传送数据部分
+        this.createMap(data.data)
+        this.hotels = data
+        return data
+      })
     },
     // 输入返回，城市列表
     async getCity (value, showList) {
@@ -447,7 +576,6 @@ export default {
       console.log(this.conditionsForm.city)
       this.destinationCityData = cityList[0]
     },
-
     getCityList (value) {
       return this.$axios({
         url: '/cities',
@@ -470,12 +598,22 @@ export default {
         return cityList
       })
     }
+  },
+  watch: {
+    'this.$route.params'(){
+      console.log(this.$route.params)
+    },
+    deep:true
   }
 }
 </script>
 
 <style lang='less' scoped>
-
+.pagination-box{
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 0 40px;
+}
 /deep/.amap-maps{
 .marker{
     display: inline-block;
