@@ -272,7 +272,10 @@ export default {
   async mounted () {
     await this.getCity(this.destinationCity)
     // console.log('这是酒店')
-
+    this.$router.push({
+      path: '/hotel',
+      query: { city: this.conditionsForm.city
+      } })
     await this.$axios({
       url: '/hotels',
       params: {
@@ -295,6 +298,27 @@ export default {
     })
   },
   methods: {
+    // 根据条件筛选酒店
+    filterHotel (value) {
+      const condition = {
+        assets: [],
+        brand: [],
+        levels: [],
+        types: []
+      }
+      const newCodition = {}
+      condition.forEach((key) => {
+        if(condition[key]){
+          newCodition.push(
+            key:condition[key]
+          )
+        }
+      })
+      const hotels = this.hotels
+      const newHotels = hotels.map((value, index) => {
+
+      })
+    },
     changeRouter () {},
     initScenic () {
       this.ismyfocus = -1
@@ -412,7 +436,7 @@ export default {
       this.conditionsForm.leftTime = this.selDate[1]
       console.log(this.conditionsForm)
     },
-    selectDepartCity (value) {
+    async selectDepartCity (value) {
       // console.log(value)
       this.conditionsForm.city = value.id
       if (this.conditionsForm.enterTime) {
@@ -433,6 +457,18 @@ export default {
       this.destinationCityData = value
       console.log('这是选择后城市数据')
       console.log(this.destinationCityData)
+      await this.$axios({
+        url: '/hotels',
+        params: {
+          city: this.conditionsForm.city
+        }
+      }).then((res) => {
+        const data = res.data
+        // 上面为传送数据部分
+        this.createMap(data.data)
+        this.hotels = data
+        return data
+      })
     },
     // 输入返回，城市列表
     async getCity (value, showList) {
@@ -447,7 +483,6 @@ export default {
       console.log(this.conditionsForm.city)
       this.destinationCityData = cityList[0]
     },
-
     getCityList (value) {
       return this.$axios({
         url: '/cities',
