@@ -125,7 +125,7 @@ export default {
   props: ['hotelData'],
   data () {
     return {
-      // // 评论星星分数
+      // //  评论星星分数
       value: 0
       // hotUpdate: {
       //   creationTime: ''
