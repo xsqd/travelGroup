@@ -297,9 +297,10 @@ export default {
       console.log(mapData)
       const map = new AMap.Map('mymap', {
         resizeEnable: true,
-        center: [118.87603, 31.730244]
+        center: [118.87603, 31.730244],
+        zoom: 8 // 级别
       })
-      closeInfoWindow()
+      // closeInfoWindow()
 
       // 添加一些分布不均的点到地图上,地图上添加三个点标记，作为参照
       mapData.forEach((item, index) => {
@@ -315,7 +316,7 @@ export default {
         marker.on('mouseout', closeInfoWindow)
         marker.emit('mouseout', { target: marker })
         marker.on('mouseover', markerClick)
-        marker.emit('mouseover', { target: marker })
+        // marker.emit('mouseover', { target: marker })
       })
       function markerClick (e) {
         const infoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30) })
@@ -409,6 +410,14 @@ export default {
     text-align: center;
     line-height: 24px;
     color: #fff;
+}
+.amap-overlays{
+  .amap-info{
+    .amap-info-contentContainer{
+      font-size: 12px !important;
+      color: #333
+    }
+  }
 }
 }
 //上收
