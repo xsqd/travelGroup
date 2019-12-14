@@ -38,7 +38,7 @@
             </div>
           </el-col>
           <el-col :span="3" class="priceBtn">
-            <el-button type="primary">
+            <el-button @click="selPrice" type="primary">
               查看价格
             </el-button>
           </el-col>
@@ -92,9 +92,9 @@
               <el-col :span="21">
                 <div class="areaPath">
                   <div :class="{hiddenAea:isareahidden}">
-                    <span :class="{myfocus:-1===ismyfocus}">全部</span>
+                    <span :class="{myfocus:-1===ismyfocus}" @click="initScenic">全部</span>
                     <a
-                      @click="changeSin(index)"
+                      @click="changeSin(index,item.id)"
                       :class="{myfocus:index===ismyfocus}"
                       v-for="(item,index) in destinationCityData.scenics"
                       :key="index"
@@ -191,6 +191,7 @@ export default {
   },
   data () {
     return {
+      scenicId: '',
       mapData: [{}],
       ismyfocus: -1,
       hotels: [{}],
@@ -271,6 +272,7 @@ export default {
   async mounted () {
     await this.getCity(this.destinationCity)
     // console.log('这是酒店')
+
     await this.$axios({
       url: '/hotels',
       params: {
@@ -293,6 +295,44 @@ export default {
     })
   },
   methods: {
+    changeRouter () {},
+    initScenic () {
+      this.ismyfocus = -1
+      if (this.conditionsForm.enterTime) {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city,
+            enterTime: this.conditionsForm.enterTime,
+            leftTime: this.conditionsForm.leftTime
+          }
+        })
+      } else {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city
+          }
+        })
+      }
+    },
+    // 查看价格按钮
+    selPrice () {
+      if (this.conditionsForm.enterTime) {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city,
+            enterTime: this.conditionsForm.enterTime,
+            leftTime: this.conditionsForm.leftTime
+          }
+        })
+      } else {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city
+          }
+        })
+      }
+      this.ismyfocus = -1
+    },
     async createMap (mapData) {
       console.log(mapData)
       const map = new AMap.Map('mymap', {
@@ -304,7 +344,7 @@ export default {
 
       // 添加一些分布不均的点到地图上,地图上添加三个点标记，作为参照
       mapData.forEach((item, index) => {
-        console.log(item, index)
+        // console.log(item, index)
         map.clearInfoWindow()
         const marker = new AMap.Marker({
           map,
@@ -328,8 +368,26 @@ export default {
       }
     },
     // 改变选择改变地图
-    changeSin (index) {
+    changeSin (index, id) {
       this.ismyfocus = index
+      this.scenicId = id
+      if (this.conditionsForm.enterTime) {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city,
+            scenic: this.scenicId,
+            enterTime: this.conditionsForm.enterTime,
+            leftTime: this.conditionsForm.leftTime
+          }
+        })
+      } else {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city,
+            scenic: this.scenicId
+          }
+        })
+      }
     },
     shouArea () {},
     getpersonNo () {
@@ -355,9 +413,26 @@ export default {
       console.log(this.conditionsForm)
     },
     selectDepartCity (value) {
-      console.log(value)
+      // console.log(value)
       this.conditionsForm.city = value.id
+      if (this.conditionsForm.enterTime) {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city,
+            enterTime: this.conditionsForm.enterTime,
+            leftTime: this.conditionsForm.leftTime
+          }
+        })
+      } else {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city
+          }
+        })
+      }
       this.destinationCityData = value
+      console.log('这是选择后城市数据')
+      console.log(this.destinationCityData)
     },
     // 输入返回，城市列表
     async getCity (value, showList) {
@@ -368,6 +443,7 @@ export default {
       }
       this.conditionsForm.city = cityList[0].id
       console.log('下面是城市Id')
+
       console.log(this.conditionsForm.city)
       this.destinationCityData = cityList[0]
     },
