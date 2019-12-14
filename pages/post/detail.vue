@@ -152,8 +152,8 @@ export default {
         url: `/posts/comments`,
         params: {
           post: this.routerId, //文章id
-          _limit: this.currentPageSize, // 每页条数
-          _start: (this.currentPage - 1) * this.currentPageSize // 每一页开始的数据
+          _limit: this.currentPageSize, // 每页条数 3
+          _start: (this.currentPage - 1) * this.currentPageSize // 每一页开始的数据 1
         }
       }).then(res => {
         // console.log(res);
@@ -231,6 +231,7 @@ export default {
     },
     //发送评论
     setBlck() {
+      console.log(this.userdata)
       if (this.userdata.follow === "") {
         delete this.userdata.follow;
       }
@@ -248,11 +249,14 @@ export default {
       }).then(res => {
         console.log(res);
         this.getReplay();
+        setTimeout(()=>{
         this.userdata.follow = "";
         this.NickName = "";
         this.userdata.content = "";
         this.userdata.pics = [];
         this.$refs.upload.clearFiles();
+        },200)
+
       });
     },
     //@按钮的删除
