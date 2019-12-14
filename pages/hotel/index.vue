@@ -165,7 +165,20 @@
           </el-col>
         </el-row>
       </div>
-      <HotelFilters :hotelInfo="hotels" :options="options" />
+      <div>
+        <HotelFilters :hotelInfo="hotels" :options="options" />
+        <div class="pagination-box">
+          <el-pagination
+            small
+            @current-change="handleCurrentChange"
+            layout="prev, pager, next"
+            prev-text='<上一页'
+            next-text='下一页>'
+            :page-size="limit"
+            :total="hotels.total">
+          </el-pagination>
+        </div>
+      </div>
     </div>
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=b90f3894dde280b2f3ac4318bbf68e10" />
   </div>
@@ -191,10 +204,12 @@ export default {
   },
   data () {
     return {
+      start:0,
+      limit:10,
       scenicId: '',
       mapData: [{}],
       ismyfocus: -1,
-      hotels: [{}],
+      hotels: {},
       options: {},
       isareahidden: true,
       isShowperson: false,
@@ -276,19 +291,20 @@ export default {
       path: '/hotel',
       query: { city: this.conditionsForm.city
       } })
-    await this.$axios({
-      url: '/hotels',
-      params: {
-        city: this.conditionsForm.city
-      }
-    }).then((res) => {
-      const data = res.data
-      // 上面为传送数据部分
-      this.createMap(data.data)
-      this.hotels = data
-      return data
-    })
-
+    // await this.$axios({
+    //   url: '/hotels',
+    //   params: {
+    //     city: this.conditionsForm.city
+    //   }
+    // }).then((res) => {
+    //   const data = res.data
+    //   // 上面为传送数据部分
+    //   console.log(data);
+    //   this.createMap(data.data)
+    //   this.hotels = data
+    //   return data
+    // })
+    await this.init()
     this.$axios({
       url: '/hotels/options'
     }).then((res) => {
@@ -298,6 +314,12 @@ export default {
     })
   },
   methods: {
+    //分页
+    handleCurrentChange(val){
+      console.log(`当前页: ${val}`)
+      this.start=(val-1)*5
+      this.init()
+    },
     // 根据条件筛选酒店
     filterHotel (value) {
       // const condition = {
@@ -369,6 +391,7 @@ export default {
     }).then(res=>{
         this.hotels=res.data
         console.log(this.hotels);
+        this.createMap(res.data.data)
     })
     },
     // 查看价格按钮
@@ -543,7 +566,11 @@ export default {
 </script>
 
 <style lang='less' scoped>
-
+.pagination-box{
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 0 40px;
+}
 /deep/.amap-maps{
 .marker{
     display: inline-block;
