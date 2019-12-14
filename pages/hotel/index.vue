@@ -38,7 +38,7 @@
             </div>
           </el-col>
           <el-col :span="3" class="priceBtn">
-            <el-button type="primary" @click="hotelsPrice">
+            <el-button @click="selPrice" type="primary">
               查看价格
             </el-button>
           </el-col>
@@ -92,15 +92,21 @@
               <el-col :span="21">
                 <div class="areaPath">
                   <div :class="{hiddenAea:isareahidden}">
-                    <span class="myfocus">全部</span>
+                    <span :class="{myfocus:-1===ismyfocus}" @click="initScenic">全部</span>
                     <a
-                      v-myfocus
+                      @click="changeSin(index,item.id)"
+                      :class="{myfocus:index===ismyfocus}"
                       v-for="(item,index) in destinationCityData.scenics"
                       :key="index"
                     >{{ item.name }}</a>
                   </div>
-                  <i @click="isareahidden=!isareahidden" :class="{iup:!isareahidden,idown:isareahidden}" class="el-icon-d-arrow-right" />
-                  等{{ destinationCityData.scenics.length }}个区域
+                  <div @click="isareahidden=!isareahidden">
+                    <i
+                      :class="{iup:!isareahidden,idown:isareahidden}"
+                      class="el-icon-d-arrow-right"
+                    />
+                    等{{ destinationCityData.scenics.length }}个区域
+                  </div>
                 </div>
               </el-col>
             </el-row>
@@ -123,57 +129,60 @@
               </el-col>
               <el-col :span="21">
                 <div class="avaragePrice">
-                  <div>
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <span>¥332</span>
-                  </div>
-                  <div>
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <span>¥521</span>
-                  </div>
-                  <div class="price4">
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <i class="iconfont iconhuangguan" />
-                    <span>¥768</span>
-                  </div>
+                  <el-tooltip :visible-arrow="false" class="item" effect="dark" content="等级评定是针对房价，设施和服务等各方面水平的综合评估。" placement="left-end">
+                    <div>
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <span>¥332</span>
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip :visible-arrow="false" class="item" effect="dark" content="等级评定是针对房价，设施和服务等各方面水平的综合评估。" placement="left-end">
+                    <div>
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <span>¥521</span>
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip :visible-arrow="false" class="item" effect="dark" content="等级评定是针对房价，设施和服务等各方面水平的综合评估。" placement="left-end">
+                    <div class="price4">
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <i class="iconfont iconhuangguan" />
+                      <span>¥768</span>
+                    </div>
+                  </el-tooltip>
                 </div>
               </el-col>
             </el-row>
           </el-col>
           <el-col :span="8">
-            <div class="map mt">
-              <img src="../../assets/snipaste_20191211_104705.png" alt>
-            </div>
+            <div id="mymap" class="mymap mt" />
           </el-col>
         </el-row>
       </div>
       <div>
-        <HotelFilters :hotelInfo='hotels' :options='options'/>
+        <HotelFilters :hotelInfo="hotels" :options="options" />
         <div class="pagination-box">
           <el-pagination
             small
-            :page-size="limit"
-            :current-page="pageIndex"
-            @current-change="changePageIndex"
+            @current-change="handleCurrentChange"
             layout="prev, pager, next"
-            :total="hotels.total"
-            prev-text='< 上一页'
-            next-text='下一页 >'>
+            prev-text='<上一页'
+            next-text='下一页>'
+            :page-size="limit"
+            :total="hotels.total">
           </el-pagination>
         </div>
       </div>
     </div>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=b90f3894dde280b2f3ac4318bbf68e10" />
   </div>
 </template>
-
 <script>
 import HotelFilters from '@/components/hotel/hotelFilters.vue'
 export default {
@@ -195,11 +204,13 @@ export default {
   },
   data () {
     return {
-      pageIndex:1,
       start:0,
       limit:10,
-      hotels:{},
-      options:{},
+      scenicId: '',
+      mapData: [{}],
+      ismyfocus: -1,
+      hotels: {},
+      options: {},
       isareahidden: true,
       isShowperson: false,
       personNo: {
@@ -268,45 +279,111 @@ export default {
         city: '',
         enterTime: '',
         leftTime: '',
-        scenic: ''
-      },
-      // 查看价格
-      hotelsprice:{
-        name_contains: '',
-        enterTime:'',
-        leftTime:'',
-        person: 0
+        scenic: '',
+        person:0
       }
     }
   },
   computed: {},
   async mounted () {
     await this.getCity(this.destinationCity)
-    this.init()
+    // console.log('这是酒店')
+    this.$router.push({
+      path: '/hotel',
+      query: { city: this.conditionsForm.city
+      } })
+    // await this.$axios({
+    //   url: '/hotels',
+    //   params: {
+    //     city: this.conditionsForm.city
+    //   }
+    // }).then((res) => {
+    //   const data = res.data
+    //   // 上面为传送数据部分
+    //   console.log(data);
+    //   this.createMap(data.data)
+    //   this.hotels = data
+    //   return data
+    // })
+    await this.init()
     this.$axios({
-        url:'/hotels/options'
-      }).then(res=>{
-        this.options=res.data.data
+      url: '/hotels/options'
+    }).then((res) => {
+      console.log('这是')
+      console.log(res)
+      this.options = res.data.data
     })
   },
   methods: {
-    async hotelsPrice(){
-      let personNumber = 0
-      for (let a of this.personNo.num.split(' ')) {
-        personNumber+=(a[0]-0)
-      }
-      this.hotelsprice.person = personNumber
-      this.hotelsprice.enterTime = this.selDate[0]
-      this.hotelsprice.leftTime = this.selDate[1]
-      this.hotelsprice.name_contains = this.destinationCity
-      console.log(this.hotelsprice)
-      let res = await this.$axios({
-        url:'/hotels',
-        query:this.hotelsprice
-      })
-      // 查看价格的数据
-      console.log(res)
+    //分页
+    handleCurrentChange(val){
+      console.log(`当前页: ${val}`)
+      this.start=(val-1)*5
+      this.init()
     },
+    // 根据条件筛选酒店
+    filterHotel (value) {
+      // const condition = {
+      //   assets: [],
+      //   brand: [],
+      //   levels: [],
+      //   types: []
+      // }
+      // const newCodition = {}
+      // condition.forEach((key) => {
+      //   if(condition[key]){
+      //     newCodition.push(
+      //       key:condition[key]
+      //     )
+      //   }
+      // })
+      // const hotels = this.hotels
+      // const newHotels = hotels.map((value, index) => {
+
+      // })
+    },
+    changeRouter () {},
+    // 区域城市选择全选
+    initScenic () {
+      this.ismyfocus = -1
+      if (this.conditionsForm.enterTime) {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city,
+            enterTime: this.conditionsForm.enterTime,
+            leftTime: this.conditionsForm.leftTime
+          }
+        })
+      } else {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city
+          }
+        })
+      }
+      // 根据条件筛选数据渲染
+      this.postsdata(this.conditionsForm)
+    },
+    //   async selPrice(){
+    //   // this.hotelsprice._start=this.start,
+    //   // this.hotelsprice._limit=this.limit
+    //   this.hotelsprice.person = personNumber
+    //   this.hotelsprice.enterTime = this.selDate[0]
+    //   this.hotelsprice.leftTime = this.selDate[1]
+    //   this.hotelsprice.name_contains = this.destinationCity
+    //   console.log(this.hotelsprice)
+    //   let res = await this.$axios({
+    //     url:'/hotels',
+    //     query:this.hotelsprice
+    //   })
+    //   // 查看价格的数据
+    //   console.log(res)
+    //   this.hotels=res.data
+    //   this.$message({
+    //       message: '搜索成功',
+    //       type: 'success'
+    //     })
+    // },
     init(){
        this.$axios({
         url:'/hotels',
@@ -317,15 +394,117 @@ export default {
         }
     }).then(res=>{
         this.hotels=res.data
-        // console.log(this.hotels);
+        console.log(this.hotels);
+        this.createMap(res.data.data)
     })
     },
-    //分页
-    changePageIndex(val){
-      // console.log(`当前页: ${val}`)
-      this.pageIndex=val
-      this.start=(val-1)*5
-      this.init()
+    // 每次筛选调用这个函数请求数据
+    async postsdata(hotelsprice){
+      // console.log(this.$route.params)
+      // for(let key in this.conditionsForm){
+      //   if(!this.conditionsForm[key]){
+      //     delete this.conditionsForm[key]
+      //   }
+      // }
+      // console.log(this.conditionsForm)
+      let res = await this.$axios({
+        url:'/hotels',
+        query:hotelsprice
+      })
+      // 查看价格的数据
+      // console.log(res)
+      this.hotels=res.data
+      this.$message({
+          message: '搜索成功',
+          type: 'success'
+        })
+
+    },
+    // 查看价格按钮
+    selPrice () {
+      let personNumber = 0
+     for(let a of this.personNo.num.split(' ') ) {
+       personNumber+=(a[0]-0)
+     }
+     this.conditionsForm.person = personNumber
+      if (this.conditionsForm.enterTime) {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city,
+            enterTime: this.conditionsForm.enterTime,
+            leftTime: this.conditionsForm.leftTime
+          }
+        })
+      } else {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city
+          }
+        })
+      }
+      // 根据条件筛选数据渲染
+      this.postsdata(this.conditionsForm)
+      this.ismyfocus = -1
+    },
+    async createMap (mapData) {
+      console.log(mapData)
+      const map = new AMap.Map('mymap', {
+        resizeEnable: true,
+        center: [118.87603, 31.730244],
+        zoom: 8 // 级别
+      })
+      // closeInfoWindow()
+
+      // 添加一些分布不均的点到地图上,地图上添加三个点标记，作为参照
+      mapData.forEach((item, index) => {
+        // console.log(item, index)
+        map.clearInfoWindow()
+        const marker = new AMap.Marker({
+          map,
+          position: [item.location.longitude, item.location.latitude],
+          title: item.address,
+          content: `<span class="marker">${index + 1}</span>`
+        })
+        marker.content = item.address
+        marker.on('mouseout', closeInfoWindow)
+        marker.emit('mouseout', { target: marker })
+        marker.on('mouseover', markerClick)
+        // marker.emit('mouseover', { target: marker })
+      })
+      function markerClick (e) {
+        const infoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30) })
+        infoWindow.setContent(e.target.content)
+        infoWindow.open(map, e.target.getPosition())
+      }
+      function closeInfoWindow () {
+        map.clearInfoWindow()
+      }
+    },
+    // 改变选择改变地图
+    changeSin (index, id) {
+      this.ismyfocus = index
+      this.scenicId = id
+      this.conditionsForm.scenic=id
+      console.log(this.conditionsForm)
+      if (this.conditionsForm.enterTime) {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city,
+            scenic: this.scenicId,
+            enterTime: this.conditionsForm.enterTime,
+            leftTime: this.conditionsForm.leftTime
+          }
+        })
+      } else {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city,
+            scenic: this.scenicId
+          }
+        })
+      }
+      // 根据条件筛选数据渲染
+       this.postsdata(this.conditionsForm)
     },
     shouArea () {},
     getpersonNo () {
@@ -348,26 +527,55 @@ export default {
       // console.log(this.selDate)
       this.conditionsForm.enterTime = this.selDate[0]
       this.conditionsForm.leftTime = this.selDate[1]
-      // console.log(this.conditionsForm)
+      console.log(this.conditionsForm)
     },
-    selectDepartCity (value) {
+    async selectDepartCity (value) {
       // console.log(value)
       this.conditionsForm.city = value.id
+      if (this.conditionsForm.enterTime) {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city,
+            enterTime: this.conditionsForm.enterTime,
+            leftTime: this.conditionsForm.leftTime
+          }
+        })
+      } else {
+        this.$router.push({
+          path: '/hotel',
+          query: { city: this.conditionsForm.city
+          }
+        })
+      }
       this.destinationCityData = value
+      console.log('这是选择后城市数据')
+      console.log(this.destinationCityData)
+      await this.$axios({
+        url: '/hotels',
+        params: {
+          city: this.conditionsForm.city
+        }
+      }).then((res) => {
+        const data = res.data
+        // 上面为传送数据部分
+        this.createMap(data.data)
+        this.hotels = data
+        return data
+      })
     },
     // 输入返回，城市列表
     async getCity (value, showList) {
       const cityList = await this.getCityList(value)
-      // console.log(cityList)
+      console.log(cityList)
       if (showList) {
         showList(cityList)
       }
       this.conditionsForm.city = cityList[0].id
-      // console.log('下面是城市Id')
-      // console.log(this.conditionsForm.city)
+      console.log('下面是城市Id')
+
+      console.log(this.conditionsForm.city)
       this.destinationCityData = cityList[0]
     },
-
     getCityList (value) {
       return this.$axios({
         url: '/cities',
@@ -375,19 +583,27 @@ export default {
           name: value
         }
       }).then((res) => {
-        // console.log(res)
+        console.log(res)
         const { data } = res.data
-        const citys = data.map((e) => {
-          return {
-            ...e,
-            value: e.name
-          }
-        })
-        const cityList = citys.filter(element => element.sort)
+        const citys = data
+          .map((e) => {
+            return {
+              ...e,
+              value: e.name
+            }
+          })
+        // citys.split(7, 10)
+        const cityList = citys.filter(element => element.id)
         // 准备建议数据,然后时候 showList 回调返回到 组件当中显示
         return cityList
       })
     }
+  },
+  watch: {
+    'this.$route.params'(){
+      console.log(this.$route.params)
+    },
+    deep:true
   }
 }
 </script>
@@ -397,6 +613,26 @@ export default {
   display: flex;
   justify-content: flex-end;
   padding: 20px 0 40px;
+}
+/deep/.amap-maps{
+.marker{
+    display: inline-block;
+    width: 22px;
+    height: 36px;
+    background-image: url(https://webapi.amap.com/theme/v1.3/markers/b/mark_b.png);
+    background-size: 22px 36px;
+    text-align: center;
+    line-height: 24px;
+    color: #fff;
+}
+.amap-overlays{
+  .amap-info{
+    .amap-info-contentContainer{
+      font-size: 12px !important;
+      color: #333
+    }
+  }
+}
 }
 //上收
 .iup {
@@ -507,12 +743,15 @@ export default {
     }
     .areaPath {
       margin-left: -10px;
-      .myfocus {
-        background-color: rgb(238, 238, 238);
-        color: #999;
+      span{
         margin-right: 18px;
         border-radius: 4px;
         padding: 0 2px;
+      }
+      .myfocus {
+        background-color: rgb(238, 238, 238);
+        color: #999;
+
       }
       a {
         cursor: pointer;
@@ -537,7 +776,7 @@ export default {
           margin-left: 5px;
         }
       }
-      .price4{
+      .price4 {
         width: 34.6%;
       }
       margin-left: -10px;
@@ -554,13 +793,9 @@ export default {
     .areahidden {
       margin-left: -10px;
     }
-    .map {
+    #mymap {
       width: 420px;
       height: 260px;
-      img {
-        width: 100%;
-        height: 100%;
-      }
     }
   }
 }

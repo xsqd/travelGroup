@@ -23,7 +23,7 @@
           </el-col>
         </div>
       </el-row>
-      <el-divider />
+      <!-- <el-divider /> -->
       <el-row :gutter="24">
         <el-col :span="4">
           <span>主要设施</span>
@@ -35,21 +35,21 @@
           <span>热水壶</span>-->
         </div>
       </el-row>
-      <el-divider />
+      <!-- <el-divider /> -->
       <el-row :gutter="24">
         <el-col :span="4">
           <span>停车服务</span>
         </el-col>
         <span>{{ hotelData.parking }}</span>
       </el-row>
-      <el-divider />
+      <!-- <el-divider /> -->
       <el-row :gutter="24">
         <el-col :span="4">
           <span>品牌信息</span>
         </el-col>
         <span>{{ hotelData.hotelbrand && hotelData.hotelbrand.name }}</span>
       </el-row>
-      <el-divider />
+      <!-- <el-divider /> -->
     </div>
     <!-- 评论区 -->
     <div class="critical">
@@ -80,7 +80,14 @@
                 :text-inside="true"
                 :stroke-width="2"
                 type="circle"
+<<<<<<< HEAD
                 color="#ff9900"
+=======
+                :width="80"
+                color="#ff9900"
+                :text-inside="true"
+                :stroke-width="2"
+>>>>>>> b2ee98b2985848a82defd3e366ad8cfab82334a3
                 class="progress"
               />
               <span class="score">{{ hotelData.scores && hotelData.scores.environment }}分</span>
@@ -95,7 +102,14 @@
                 :text-inside="true"
                 :stroke-width="2"
                 type="circle"
+<<<<<<< HEAD
                 color="#ff9900"
+=======
+                :width="80"
+                color="#ff9900"
+                :text-inside="true"
+                :stroke-width=2
+>>>>>>> b2ee98b2985848a82defd3e366ad8cfab82334a3
                 class="progress2"
               />
               <span class="score2">{{ hotelData.scores && hotelData.scores.product }}分</span>
@@ -110,7 +124,14 @@
                 :text-inside="true"
                 :stroke-width="2"
                 type="circle"
+<<<<<<< HEAD
                 color="#ff9900"
+=======
+                :width=80
+                color="#ff9900"
+                :text-inside="true"
+                :stroke-width="2"
+>>>>>>> b2ee98b2985848a82defd3e366ad8cfab82334a3
                 class="progress3"
               />
               <span class="score3">{{ hotelData.scores && hotelData.scores.service }}分</span>
@@ -151,6 +172,7 @@ export default {
 <style lang="less" scoped>
 // 酒店信息样式
 .information {
+  margin-bottom: 40px;
   .informationDexter {
     font-size: 14px;
   }
@@ -162,6 +184,10 @@ export default {
     background-color: #eee;
     color: #666;
     font-size: 14px;
+  }
+  .el-row{
+    padding:24px 0;
+    border-bottom: 1px solid #eeeeee;
   }
 }
 // 评论样式
@@ -207,7 +233,7 @@ export default {
       .score {
         position: absolute;
         top: 24px;
-        left: 435px;
+        left: 430px;
       }
       .progress2 {
         position: absolute;
@@ -217,7 +243,7 @@ export default {
       .score2 {
         position: absolute;
         top: 24px;
-        left: 560px;
+        left: 556px;
       }
       .progress3 {
         position: absolute;
@@ -227,7 +253,7 @@ export default {
       .score3 {
         position: absolute;
         top: 24px;
-        left: 688px;
+        left: 684px;
       }
     }
   }
