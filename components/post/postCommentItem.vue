@@ -29,7 +29,7 @@ export default {
          visibility:hidden;
          clear:both;
      }
-     .clearfix{zoom:1;}
+.clearfix{zoom:1;}
 .postCommentItem {
     width: 100%;
     background: #f9f9f9;
