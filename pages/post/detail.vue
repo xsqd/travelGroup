@@ -2,16 +2,16 @@
   <div class="detail">
     <div class="left">
       <!-- 面包屑导航 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
+      <el-breadcrumb separator="/post" class="breadcrumb">
         <el-breadcrumb-item>
           <a href="/">旅游攻略</a>
         </el-breadcrumb-item>
         <el-breadcrumb-item>攻略详情</el-breadcrumb-item>
       </el-breadcrumb>
       <!-- 标题 -->
-      <h1>远东行：用好奇心打量这座城 —— 最值得收藏的海参崴出行攻略</h1>
+      <h1>{{data.title}}</h1>
       <div class="post-time">
-        <span>攻略: 2019-05-22 10:57</span>
+        <span>{{ data.created_at | gettime}}</span>
         <span>{{`阅读:${data.watch}`}}</span>
       </div>
       <!-- 内容 -->
@@ -22,7 +22,7 @@
           <span class="iconfont iconpinglun"></span>
           <span class="i-text">{{`评论(100)`}}</span>
         </div>
-        <div>
+        <div @click="shouchang">
           <span class="iconfont iconpinglun"></span>
           <span class="i-text">收藏</span>
         </div>
@@ -30,7 +30,7 @@
           <span class="iconfont iconfenxiang"></span>
           <span class="i-text">分享</span>
         </div>
-        <div>
+        <div @click="like">
           <span class="iconfont iconding"></span>
           <span class="i-text">{{`点赞(${data.like})`}}</span>
         </div>
@@ -59,6 +59,7 @@
             :on-remove="handleRemove"
             name="files"
             :before-upload="screen"
+            ref="upload"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -79,6 +80,16 @@
           :key="index"
         ></PostComment>
       </div>
+      <!-- 分页 -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[3, 6, 9, 12]"
+        :page-size="currentPageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalList"
+      ></el-pagination>
     </div>
     <div class="right">
       <div class="title">相关攻略</div>
@@ -92,6 +103,7 @@
 <script>
 import PostRom from "@/components/post/postRom.vue";
 import PostComment from "@/components/post/postComment.vue";
+import moment from "moment";
 
 export default {
   watch: {
@@ -101,6 +113,7 @@ export default {
   },
   data() {
     return {
+      routerId: "", //路由ID
       data: {
         likeIds: []
       },
@@ -119,8 +132,18 @@ export default {
         pics: [],
         post: 6
       },
-      NickName: ""
+      NickName: "",
+      // 当前页码
+      currentPage: 1,
+      currentPageSize: 3,
+      totalList: 0 // 全部数据总数
     };
+  },
+  filters: {
+    gettime(e) {
+      console.log(e);
+      return moment(e).format("YYYY-MM-DD HH:mm:ss"); //2014-09-24 23:36:09
+    }
   },
   methods: {
     //封装 评论ajax
@@ -128,24 +151,64 @@ export default {
       this.$axios({
         url: `/posts/comments`,
         params: {
-          post: 6, //文章id
-          _limit: 3,
-          _start: 0
+          post: this.routerId, //文章id
+          _limit: this.currentPageSize, // 每页条数
+          _start: (this.currentPage - 1) * this.currentPageSize // 每一页开始的数据
         }
       }).then(res => {
         // console.log(res);
         this.replyData = res.data.data;
+        this.totalList = res.data.total;
         console.log(this.replyData);
       });
     },
+    // 点赞 收藏
+    like() {
+      this.$axios({
+        headers: {
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        },
+        url: "/posts/like",
+        params: {
+          id: this.$store.state.user.userInfo.user.id
+        }
+      }).then(res => {
+        console.log(res);
+      });
+    },
+    shouchang(){
+      this.$axios({
+        headers: {
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        },
+        url: "/posts/star",
+        params: {
+          id: this.$store.state.user.userInfo.user.id
+        }
+      }).then(res => {
+        console.log(res);
+      });
+    },
     //上传图片
-    uploadImg(res) {
+    uploadImg(res, b) {
+      console.log(b);
       this.userdata.pics.push(res[0]);
       console.log(this.userdata.pics);
     },
     //删除图片
-    handleRemove(a){
-      console.log(a);
+    handleRemove(a) {
+      console.log(a.response[0].id);
+      let b = this.userdata.pics;
+      console.log(b);
+      for (var i = 0; i < b.length; i++) {
+        console.log(b[i].id);
+        console.log(b[i].id == a.response[0].id);
+        if (b[i].id == a.response[0].id) {
+          console.log(123);
+          b.splice(i, 1);
+          console.log(b);
+        }
+      }
     },
     //判断上传文件类型
     screen(flies) {
@@ -182,13 +245,27 @@ export default {
         data: this.userdata
       }).then(res => {
         console.log(res);
-         this.getReplay()
-
+        this.getReplay();
+        this.userdata.follow = "";
+        this.NickName = "";
+        this.form.name = "";
+        this.userdata.pics = [];
+        this.$refs.upload.clearFiles();
       });
     },
     //@按钮的删除
     del() {
       this.userdata.follow = "";
+    },
+    // 每页显示数据
+    handleSizeChange(currentPageSize) {
+      this.currentPageSize = currentPageSize;
+      this.getReplay();
+    },
+    // 当前页面
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      this.getReplay();
     }
   },
   //组件
@@ -200,16 +277,17 @@ export default {
   created() {
     // /post/detail?id=4
     //这个是页面内容数据
+    this.routerId = this.$route.query.id;
     this.$axios({
-      url: `/posts/?id=4`
+      url: `/posts/?id=${this.routerId}`
     }).then(res => {
       this.data = res.data.data[0];
       console.log(res);
-      console.log(this.data);
+      // console.log(this.data);
       // console.log(this.data.likeIds.length);
     });
     //这个是评论页面数据
-    this.getReplay()
+    this.getReplay();
   }
 };
 </script>
@@ -285,9 +363,9 @@ export default {
         line-height: 32px;
       }
     }
-    /deep/.el-input__inner {
-      height: 60px;
-    }
+    // /deep/.el-input__inner {
+    //   height: 60px;
+    // }
     .reply {
       position: relative;
       font-size: 10px;
