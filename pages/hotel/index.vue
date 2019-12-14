@@ -361,6 +361,8 @@ export default {
           }
         })
       }
+      // 根据条件筛选数据渲染
+      this.postsdata(this.conditionsForm)
     },
     //   async selPrice(){
     //   // this.hotelsprice._start=this.start,
@@ -440,6 +442,7 @@ export default {
           }
         })
       }
+      // 根据条件筛选数据渲染
       this.postsdata(this.conditionsForm)
       this.ismyfocus = -1
     },
@@ -500,6 +503,8 @@ export default {
           }
         })
       }
+      // 根据条件筛选数据渲染
+       this.postsdata(this.conditionsForm)
     },
     shouArea () {},
     getpersonNo () {
