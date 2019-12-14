@@ -76,42 +76,67 @@
               <div>环境</div>
               <el-progress
                 :percentage="8*10"
+                :width="80"
+                :text-inside="true"
+                :stroke-width="2"
                 type="circle"
+<<<<<<< HEAD
+                color="#ff9900"
+=======
                 :width="80"
                 color="#ff9900"
                 :text-inside="true"
                 :stroke-width="2"
+>>>>>>> b2ee98b2985848a82defd3e366ad8cfab82334a3
                 class="progress"
               />
-              <span class="score">{{ hotelData.stars }}分</span>
+              <span class="score">{{ hotelData.scores && hotelData.scores.environment }}分</span>
+              <!-- <span class="score">{{ hotelData.environment }}分</span> -->
+              <!-- <span class="score">{{ scores.environment }}分</span> -->
             </el-col>
             <el-col :span="3">
               <div>产品</div>
               <el-progress
                 :percentage="8.5*10"
+                :width="80"
+                :text-inside="true"
+                :stroke-width="2"
                 type="circle"
+<<<<<<< HEAD
+                color="#ff9900"
+=======
                 :width="80"
                 color="#ff9900"
                 :text-inside="true"
                 :stroke-width=2
+>>>>>>> b2ee98b2985848a82defd3e366ad8cfab82334a3
                 class="progress2"
               />
-              <span class="score2">{{ hotelData.stars }}分</span>
+              <span class="score2">{{ hotelData.scores && hotelData.scores.product }}分</span>
+              <!-- <span class="score2">{{ hotelData.product }}分</span> -->
+              <!-- <span class="score2">{{ scores.product }}分</span> -->
             </el-col>
             <el-col :span="3">
-              <div>
-                服务
-              </div>
+              <div>服务</div>
               <el-progress
                 :percentage="8*10"
+                :width="80"
+                :text-inside="true"
+                :stroke-width="2"
                 type="circle"
+<<<<<<< HEAD
+                color="#ff9900"
+=======
                 :width=80
                 color="#ff9900"
                 :text-inside="true"
                 :stroke-width="2"
+>>>>>>> b2ee98b2985848a82defd3e366ad8cfab82334a3
                 class="progress3"
               />
-              <span class="score3">{{ hotelData.stars }}分</span>
+              <span class="score3">{{ hotelData.scores && hotelData.scores.service }}分</span>
+              <!-- <span class="score3">{{ hotelData.service }}分</span> -->
+              <!-- <span class="score3">{{ scores.service }}分</span> -->
             </el-col>
           </div>
         </el-row>
@@ -125,7 +150,7 @@ export default {
   props: ['hotelData'],
   data () {
     return {
-      // // 评论星星分数
+      // //  评论星星分数
       value: 0
       // hotUpdate: {
       //   creationTime: ''
@@ -136,6 +161,9 @@ export default {
     hotelData () {
       // console.log(this.hotelData)
       this.value = this.hotelData.stars
+      // this.i = this.hotelData.scores.environment
+      // this. '2' =this.hotelData.scores.product
+      // this. '3' =this.hotelData.scores.service
     }
   }
 }
@@ -202,7 +230,7 @@ export default {
         top: 5px;
         left: 406px;
       }
-      .score{
+      .score {
         position: absolute;
         top: 24px;
         left: 430px;
@@ -212,7 +240,7 @@ export default {
         top: 5px;
         left: 534px;
       }
-      .score2{
+      .score2 {
         position: absolute;
         top: 24px;
         left: 556px;
@@ -222,7 +250,7 @@ export default {
         top: 5px;
         left: 660px;
       }
-      .score3{
+      .score3 {
         position: absolute;
         top: 24px;
         left: 684px;

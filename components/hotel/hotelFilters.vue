@@ -21,9 +21,18 @@
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item v-for="(item,index) in options.levels" :key="index" :command="item.name">
-                <i class="iconfont iconcircle"></i>{{item.name}}
+              <!-- 搜索星级 -->
+
+              <el-dropdown-item
+                v-for="(item,index) in options.levels"
+                :key="index"
+                @click.native="userdata(index)"
+              >
+                <!-- <i class="iconfont "></i>{{item.name  item.show?true:false}} -->
+                <i :class="{'iconcircle' : !(item.show), 'iconright-1': item.show,'iconfont':true}"></i>
+                {{item.name}}
               </el-dropdown-item>
+              <!-- <p :class="{'p1' : false, 'p': true}"> -->
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -37,8 +46,14 @@
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" style="width:150px;">
-              <el-dropdown-item v-for="(item,index) in options.types" :key="index" :command="item.name">
-                <i class="iconfont iconcircle"></i>{{item.name}}
+              <!-- 住宿类型 -->
+              <el-dropdown-item
+                v-for="(item,index) in options.types"
+                :key="index"
+                @click.native="hotelTypes(index)"
+              >
+                <i :class="{'iconcircle' : !(item.show), 'iconright-1': item.show,'iconfont':true}"></i>
+                {{item.name}}
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -53,8 +68,14 @@
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" style="width:150px;">
-              <el-dropdown-item v-for="(item,index) in options.assets" :key="index" :command="item.name">
-                <i class="iconfont iconcircle"></i>{{item.name}}
+              <!-- 酒店设施 -->
+              <el-dropdown-item
+                v-for="(item,index) in options.assets"
+                :key="index"
+                @click.native="hotelAssets(index)"
+              >
+                <i :class="{'iconcircle' : !(item.show), 'iconright-1': item.show,'iconfont':true}"></i>
+                {{item.name}}
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -69,8 +90,14 @@
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" style="width:150px;overflow:auto;max-height:230px;">
-              <el-dropdown-item v-for="(item,index) in options.brands" :key="index" :command="item.name">
-                <i class="iconfont iconcircle"></i>{{item.name}}
+              <!-- 酒店品牌 -->
+              <el-dropdown-item
+                v-for="(item,index) in options.brands"
+                :key="index"
+                @click.native="hotelBrands(index)"
+              >
+                <i :class="{'iconcircle' : !(item.show), 'iconright-1': item.show,'iconfont':true}"></i>
+                {{item.name}}
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -82,16 +109,12 @@
       justify="space-between"
       align-items="center"
       style="padding:25px 0;border-bottom:1px solid #eee;"
-      v-for="(item,index) in hotelInfo.data" :key="index"
+      v-for="(item,index) in hotelInfo.data"
+      :key="index"
     >
       <el-col :span="8">
         <nuxt-link :to="`/hotel/hotelDetail?id=${item.id}`">
-           <img
-            :src="`${item.photos}`"
-            :alt="`${item.name}`"
-            width="320"
-            height="210"
-          />
+          <img :src="`${item.photos}`" :alt="`${item.name}`" width="320" height="210" />
         </nuxt-link>
       </el-col>
       <el-col :span="10">
@@ -116,8 +139,8 @@
               disabled
               show-score
               text-color="#ff9900"
-              score-template="{value}分">
-            </el-rate>
+              score-template="{value}分"
+            ></el-rate>
           </el-col>
           <el-col :span="7" style="padding:0 5px;font-size:16px;color:#000;">
             <span class="hight-light">{{item.all_remarks}}</span> 条评论
@@ -142,24 +165,29 @@
                 <i class="el-icon-arrow-right"></i>
               </div>
             </nuxt-link>
-          </li> -->
-          <div class="link">
-            <!-- <nuxt-link to="https://hotels.ctrip.com/hotel/694679.html" v-for="(value,index) in item.products" :key="index">
+        </li>-->
+        <div class="link">
+          <!-- <nuxt-link to="https://hotels.ctrip.com/hotel/694679.html" v-for="(value,index) in item.products" :key="index">
               <div class="lianjie">
                 <span style="width:120px; display:inline-block;">{{item.products[index].name}}</span>
                 <span class="hight-light larger">￥{{item.products[index].price}}</span>起
                 <i class="el-icon-arrow-right"></i>
               </div>
-            </nuxt-link> -->
-            <a href="https://hotels.ctrip.com/hotel/694679.html" target="view_frame" v-for="(value,index) in item.products" :key="index">
-               <div class="lianjie">
-                <span style="width:120px; display:inline-block;">{{item.products[index].name}}</span>
-                <span class="hight-light larger">￥{{item.products[index].price}}</span>起
-                <i class="el-icon-arrow-right"></i>
-              </div>
-            </a>
-          </div>
-          <!-- <li>
+          </nuxt-link>-->
+          <a
+            href="https://hotels.ctrip.com/hotel/694679.html"
+            target="view_frame"
+            v-for="(value,index) in item.products"
+            :key="index"
+          >
+            <div class="lianjie">
+              <span style="width:120px; display:inline-block;">{{item.products[index].name}}</span>
+              <span class="hight-light larger">￥{{item.products[index].price}}</span>起
+              <i class="el-icon-arrow-right"></i>
+            </div>
+          </a>
+        </div>
+        <!-- <li>
             <span>{{item.products[1].name}}</span>
             <div>
               <span class="hight-light larger">￥{{item.products[1].price}}</span>起
@@ -172,7 +200,7 @@
               <span class="hight-light larger">￥{{item.products[2].price}}</span>起
               <i class="el-icon-arrow-right"></i>
             </div>
-          </li> -->
+        </li>-->
         <!-- </ul> -->
       </el-col>
     </el-row>
@@ -181,25 +209,66 @@
 
 <script>
 export default {
-  props:['hotelInfo','options'],
+  props: ["hotelInfo", "options"],
   data() {
     return {
       value: 4000,
       placeholder:'不限'
     };
   },
-  methods:{
-    handleCommand(command){
+  methods: {
+    //星级
+    userdata(index) {
+      if (this.options.levels[index].show === true) {
+        this.options.levels[index].show = false;
+      } else {
+        this.options.levels[index].show = true;
+      }
+      console.log(this.options.levels[index].show);
+      this.$forceUpdate();
+    },
+    //住宿类型
+        hotelTypes(index) {
+      if (this.options.types[index].show === true) {
+        this.options.types[index].show = false;
+      } else {
+        this.options.types[index].show = true;
+      }
+      console.log(this.options.types[index].show);
+      this.$forceUpdate();
+    },
+    //酒店设施
+        hotelAssets(index) {
+      if (this.options.assets[index].show === true) {
+        this.options.assets[index].show = false;
+      } else {
+        this.options.assets[index].show = true;
+      }
+      console.log(this.options.assets[index].show);
+      this.$forceUpdate();
+    },
+    // 酒店品牌
+     hotelBrands(index) {
+      if (this.options.brands[index].show === true) {
+        this.options.brands[index].show = false;
+      } else {
+        this.options.brands[index].show = true;
+      }
+      console.log(this.options.brands[index].show);
+      this.$forceUpdate();
+    },
+      handleCommand(command){
       console.log(command)
       this.placeholder=command
     }
+
   }
 };
 </script>
 
 <style lang="less" scoped>
-.el-dropdown-menu{
-  width:180px !important;
+.el-dropdown-menu {
+  width: 180px !important;
 }
 .filters-top {
   padding: 5px 0;
@@ -265,11 +334,11 @@ export default {
 .larger {
   font-size: larger;
 }
-.link{
+.link {
   margin-top: 20px;
   padding: 0 10px;
 }
-.lianjie{
+.lianjie {
   border-bottom: 1px solid #ebeef5;
   padding: 12px 0;
 }
