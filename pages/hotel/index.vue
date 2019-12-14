@@ -38,7 +38,7 @@
             </div>
           </el-col>
           <el-col :span="3" class="priceBtn">
-            <el-button type="primary">
+            <el-button type="primary" @click="hotelsPrice">
               查看价格
             </el-button>
           </el-col>
@@ -269,6 +269,13 @@ export default {
         enterTime: '',
         leftTime: '',
         scenic: ''
+      },
+      // 查看价格
+      hotelsprice:{
+        name_contains: '',
+        enterTime:'',
+        leftTime:'',
+        person: 0
       }
     }
   },
@@ -283,6 +290,23 @@ export default {
     })
   },
   methods: {
+    async hotelsPrice(){
+      let personNumber = 0
+      for (let a of this.personNo.num.split(' ')) {
+        personNumber+=(a[0]-0)
+      }
+      this.hotelsprice.person = personNumber
+      this.hotelsprice.enterTime = this.selDate[0]
+      this.hotelsprice.leftTime = this.selDate[1]
+      this.hotelsprice.name_contains = this.destinationCity
+      console.log(this.hotelsprice)
+      let res = await this.$axios({
+        url:'/hotels',
+        query:this.hotelsprice
+      })
+      // 查看价格的数据
+      console.log(res)
+    },
     init(){
        this.$axios({
         url:'/hotels',
