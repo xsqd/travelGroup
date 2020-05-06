@@ -7,7 +7,7 @@ export default {
   ** Headers of the page
   */
   head: {
-    title: '闲云旅游网', // 修改title
+    title: '优质旅行', // 修改title
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -68,7 +68,7 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    extend(config, ctx) {
     }
   }
 }
